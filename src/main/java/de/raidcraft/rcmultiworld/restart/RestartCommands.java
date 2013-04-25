@@ -39,6 +39,12 @@ public class RestartCommands {
     @CommandPermissions("rcmultiworld.restart")
     public void scheduled(CommandContext context, CommandSender sender) throws CommandException {
 
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
 
+        //TODO implement
+
+        sender.sendMessage(ChatColor.YELLOW + "Serverneustart um " + hour + ":" + minute + ":" + second + "Uhr");
     }
 }
