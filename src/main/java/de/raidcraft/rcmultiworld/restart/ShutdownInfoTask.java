@@ -30,10 +30,12 @@ public class ShutdownInfoTask implements Runnable {
 
     public void run() {
 
+        if(manager.getNextRestart() < 0) return;
+
         int diff = (int)(manager.getNextRestart()/1000) - (int)(System.currentTimeMillis()/1000);
 
         if(diff <= 0) {
-
+            manager.setNextRestart(-1);
             manager.restart();
             return;
         }
