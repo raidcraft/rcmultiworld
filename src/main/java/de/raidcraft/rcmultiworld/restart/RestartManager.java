@@ -47,7 +47,7 @@ public class RestartManager {
 
     public void restart() {
 
+        Bukkit.broadcastMessage(ChatColor.GOLD + "** " + ChatColor.DARK_RED + "Server wird neugestartet " + ChatColor.GOLD + "**");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), config.localRestartCommand);
-        Bukkit.broadcastMessage(ChatColor.GOLD + "** Server wird neugestartet **");
     }
 }

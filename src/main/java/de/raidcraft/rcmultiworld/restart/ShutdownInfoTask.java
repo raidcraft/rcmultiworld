@@ -31,14 +31,14 @@ public class ShutdownInfoTask implements Runnable {
     public void run() {
 
         int diff = (int)(manager.getNextRestart()/1000) - (int)(System.currentTimeMillis()/1000);
+
+        if(diff <= 0) {
+
+            manager.restart();
+            return;
+        }
+
         if(thresholds.contains(diff)) {
-
-            if(diff <= 0) {
-
-                manager.restart();
-                return;
-            }
-
             String info = ChatColor.GOLD + "** Neustart in ";
             if(diff >= 120) {
                 info += (diff/60) + " Minuten";
