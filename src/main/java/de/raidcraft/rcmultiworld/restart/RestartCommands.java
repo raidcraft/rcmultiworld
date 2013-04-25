@@ -28,7 +28,7 @@ public class RestartCommands {
 
         RCMultiWorldPlugin plugin = RaidCraft.getComponent(RCMultiWorldPlugin.class);
         plugin.getRestartManager().setNextRestart(System.currentTimeMillis() + plugin.getRestartManager().getConfig().restartDelay * 1000);
-        sender.sendMessage(ChatColor.YELLOW + "Neustart wird ausgefxfvgdfvsührt!");
+        sender.sendMessage(ChatColor.YELLOW + "Neustart wird ausgeführt!");
     }
 
     @Command(
