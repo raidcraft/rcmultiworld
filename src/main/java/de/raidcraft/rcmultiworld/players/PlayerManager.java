@@ -45,7 +45,7 @@ public class PlayerManager {
 
     public void join(String player) {
 
-        Bukkit.broadcastMessage(ChatColor.GRAY + player + " hat sich eingeloggt.");
+        Bukkit.broadcastMessage(ChatColor.YELLOW + player + " hat sich eingeloggt.");
         if(!players.containsKey(player)) {
             players.put(player, new MultiWorldPlayer(player));
         }
@@ -54,7 +54,7 @@ public class PlayerManager {
 
     public void leave(String player) {
 
-        Bukkit.broadcastMessage(ChatColor.GRAY + player + " hat das Spiel verlassen.");
+        Bukkit.broadcastMessage(ChatColor.YELLOW + player + " hat das Spiel verlassen.");
         players.get(player).setOnline(false);
     }
 

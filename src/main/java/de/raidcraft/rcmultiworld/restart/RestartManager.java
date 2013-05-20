@@ -11,7 +11,7 @@ public class RestartManager {
 
     private RCMultiWorldPlugin plugin;
     private RestartConfig config;
-    private long nextRestart;
+    private long nextRestart = -1;
     private ShutdownInfoTask infoTask;
 
     public RestartManager(RCMultiWorldPlugin plugin) {
