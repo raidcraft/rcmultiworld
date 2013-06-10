@@ -14,6 +14,7 @@ import de.raidcraft.rcmultiworld.bungeecord.messages.TeleportToPlayerMessage;
 import de.raidcraft.rcmultiworld.events.FoundPlayersServerEvent;
 import de.raidcraft.rcmultiworld.listener.FoundPlayersServerListener;
 import de.raidcraft.rcmultiworld.players.MultiWorldPlayer;
+import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
 import de.raidcraft.rcmultiworld.utilclasses.FoundPlayersServerAction;
 import de.raidcraft.rcmultiworld.utilclasses.ServerLocation;
 import de.raidcraft.util.BungeeCordUtil;
@@ -66,7 +67,8 @@ public class TeleportCommand {
                         player.sendMessage(ChatColor.YELLOW + "Teleported.");
                     }
                     else {
-                        BungeeCordUtil.changeServer(player, world);
+                        String targetServer = RaidCraft.getTable(WorldInfoTable.class).getWorldHost(world);
+                        BungeeCordUtil.changeServer(player, targetServer);
                         plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(player.getName(),
                                 world, coords[0], coords[1], coords[2], "0", "0"));
                     }
