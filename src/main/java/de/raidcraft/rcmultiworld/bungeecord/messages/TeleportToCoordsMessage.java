@@ -4,6 +4,7 @@ import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.BungeeManager;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
 import de.raidcraft.rcmultiworld.listener.PlayerListener;
+import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
 import de.raidcraft.rcmultiworld.utilclasses.LocatablePlayer;
 import de.raidcraft.rcmultiworld.utilclasses.ServerLocation;
 import de.raidcraft.util.BungeeCordUtil;
@@ -95,7 +96,8 @@ public class TeleportToCoordsMessage extends BungeeMessage {
 
         // if player is here but on the wrong server -> change server
         if(teleportPlayer != null) {
-            BungeeCordUtil.changeServer(teleportPlayer, world);
+            String targetServer = RaidCraft.getTable(WorldInfoTable.class).getWorldHost(world);
+            BungeeCordUtil.changeServer(teleportPlayer, targetServer);
         }
     }
 }

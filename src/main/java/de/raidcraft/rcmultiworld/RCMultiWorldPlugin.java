@@ -1,5 +1,6 @@
 package de.raidcraft.rcmultiworld;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
 import de.raidcraft.rcmultiworld.bungeecord.BungeeListener;
 import de.raidcraft.rcmultiworld.commands.InfoCommands;
@@ -9,7 +10,9 @@ import de.raidcraft.rcmultiworld.listener.FoundPlayersServerListener;
 import de.raidcraft.rcmultiworld.listener.PlayerListener;
 import de.raidcraft.rcmultiworld.players.PlayerManager;
 import de.raidcraft.rcmultiworld.restart.RestartManager;
+import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 
 /**
  * @author Philip
@@ -30,6 +33,8 @@ public class RCMultiWorldPlugin extends BasePlugin {
         registerCommands(TeleportCommand.class);
         registerCommands(InfoCommands.class);
 
+        registerTable(WorldInfoTable.class, new WorldInfoTable());
+
         Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
 
         config = configure(new PluginConfiguration(this), false);
@@ -45,6 +50,11 @@ public class RCMultiWorldPlugin extends BasePlugin {
 
         restartManager.reload();
         config.reload();
+
+        String mainWorld = Bukkit.getWorlds().get(0).getName();
+        for(World world : Bukkit.getWorlds()) {
+            RaidCraft.getTable(WorldInfoTable.class).addWorld(mainWorld, world.getName());
+        }
     }
 
     @Override
