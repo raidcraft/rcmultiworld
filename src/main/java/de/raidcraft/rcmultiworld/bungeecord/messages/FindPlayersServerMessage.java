@@ -34,6 +34,6 @@ public class FindPlayersServerMessage extends BungeeMessage {
             return;
         }
 
-        plugin.getBungeeManager().sendMessage(player, new SendPlayersServerMessage(player.getName(), player.getWorld().getName()));
+        plugin.getBungeeManager().sendMessage(player, new SendPlayersServerMessage(player.getName(), Bukkit.getWorlds().get(0).getName()));
     }
 }
