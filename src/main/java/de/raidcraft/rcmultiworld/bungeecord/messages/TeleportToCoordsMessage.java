@@ -5,7 +5,7 @@ import de.raidcraft.rcmultiworld.BungeeManager;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
 import de.raidcraft.rcmultiworld.listener.PlayerListener;
 import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
-import de.raidcraft.rcmultiworld.utilclasses.LocatablePlayer;
+import de.raidcraft.rcmultiworld.utilclasses.LocatableLocation;
 import de.raidcraft.rcmultiworld.utilclasses.ServerLocation;
 import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.Bukkit;
@@ -88,7 +88,7 @@ public class TeleportToCoordsMessage extends BungeeMessage {
                     teleportPlayer.sendMessage(ChatColor.YELLOW + "Teleported.");
                 }
                 else {
-                    PlayerListener.enqueuePlayer(player, new LocatablePlayer(teleportPlayer));
+                    PlayerListener.enqueuePlayer(player, new LocatableLocation(location));
                 }
                 return;
             }
