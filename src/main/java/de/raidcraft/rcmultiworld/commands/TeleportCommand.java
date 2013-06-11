@@ -68,9 +68,10 @@ public class TeleportCommand {
                     }
                     else {
                         String targetServer = RaidCraft.getTable(WorldInfoTable.class).getWorldHost(world);
-                        BungeeCordUtil.changeServer(player, targetServer);
                         plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(player.getName(),
                                 world, coords[0], coords[1], coords[2], "0", "0"));
+                        player.sendMessage(ChatColor.YELLOW + "Change to server: " + targetServer);
+                        BungeeCordUtil.changeServer(player, targetServer);
                     }
                     return;
                 }
