@@ -5,18 +5,15 @@ import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import de.raidcraft.RaidCraft;
-import de.raidcraft.rcmultiworld.BungeeManager;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
 import de.raidcraft.rcmultiworld.bungeecord.messages.FindPlayersServerMessage;
 import de.raidcraft.rcmultiworld.bungeecord.messages.SaveReturnLocationMessage;
 import de.raidcraft.rcmultiworld.bungeecord.messages.TeleportToCoordsMessage;
-import de.raidcraft.rcmultiworld.bungeecord.messages.TeleportToPlayerMessage;
-import de.raidcraft.rcmultiworld.events.FoundPlayersServerEvent;
 import de.raidcraft.rcmultiworld.listener.FoundPlayersServerListener;
 import de.raidcraft.rcmultiworld.players.MultiWorldPlayer;
 import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
-import de.raidcraft.rcmultiworld.utilclasses.FoundPlayersServerAction;
 import de.raidcraft.rcmultiworld.utilclasses.ServerLocation;
+import de.raidcraft.rcmultiworld.utilclasses.TeleportOnServerFoundAction;
 import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -91,13 +88,13 @@ public class TeleportCommand {
                 plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
                 player.teleport(targetPlayer);
                 player.sendMessage(ChatColor.YELLOW + "Teleported.");
-                return;
             }
-
-            plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
-            plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
-            FoundPlayersServerListener.registerAction(multiWorldPlayer.getName(), new TeleportOnServerFoundAction(player, plugin.getBungeeManager()));
-            plugin.getBungeeManager().sendMessage(player, new FindPlayersServerMessage(multiWorldPlayer.getName()));
+            else {
+                plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
+                plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
+                FoundPlayersServerListener.registerAction(multiWorldPlayer.getName(), new TeleportOnServerFoundAction(player, plugin.getBungeeManager()));
+                plugin.getBungeeManager().sendMessage(player, new FindPlayersServerMessage(multiWorldPlayer.getName()));
+            }
         }
     }
 
@@ -157,25 +154,6 @@ public class TeleportCommand {
         }
         else {
             plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(player.getName(), serverLocation));
-        }
-    }
-
-    public class TeleportOnServerFoundAction extends FoundPlayersServerAction {
-
-        private Player player;
-        private BungeeManager bungeeManager;
-
-        public TeleportOnServerFoundAction(Player player, BungeeManager bungeeManager) {
-
-            this.player = player;
-            this.bungeeManager = bungeeManager;
-        }
-
-        @Override
-        public void process(FoundPlayersServerEvent event) {
-
-            bungeeManager.sendMessage(player, new TeleportToPlayerMessage(player.getName(), event.getPlayer()));
-            BungeeCordUtil.changeServer(player, event.getServer());
         }
     }
 }
