@@ -61,6 +61,7 @@ public class TeleportCommand {
                         plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
                         plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
                         player.teleport(location);
+                        sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
                         player.sendMessage(ChatColor.YELLOW + "Teleported.");
                     }
                     else {
@@ -70,6 +71,7 @@ public class TeleportCommand {
                         plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(player.getName(),
                                 world, coords[0], coords[1], coords[2], "0", "0"));
                     }
+                    sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
                     return;
                 }
                 catch(NumberFormatException | IndexOutOfBoundsException e) {
@@ -87,6 +89,7 @@ public class TeleportCommand {
                 plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
                 plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
                 player.teleport(targetPlayer);
+                sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
                 player.sendMessage(ChatColor.YELLOW + "Teleported.");
             }
             else {
@@ -121,6 +124,7 @@ public class TeleportCommand {
                 plugin.getPlayerManager().getPlayer(targetPlayer.getName()).setBeforeTeleportLocation(new ServerLocation(targetPlayer.getLocation()));
                 plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(targetPlayer.getName(), targetPlayer.getLocation()));
                 targetPlayer.teleport(player);
+                sender.sendMessage(ChatColor.YELLOW + "You teleported " + targetPlayer.getName() + ".");
                 targetPlayer.sendMessage(ChatColor.YELLOW + "Teleported.");
                 return;
             }

@@ -30,8 +30,10 @@ public class PlayerListener implements Listener {
 
         Locatable locatable = queuedLoginTeleports.remove(event.getPlayer().getName().toLowerCase());
         if(locatable != null) {
-            event.getPlayer().teleport(locatable.getLocation());
-            event.getPlayer().sendMessage(ChatColor.YELLOW + "Teleported.");
+            if(!event.getPlayer().getWorld().getName().equalsIgnoreCase(locatable.getLocation().getWorld().getName())) {
+                event.getPlayer().teleport(locatable.getLocation());
+                event.getPlayer().sendMessage(ChatColor.YELLOW + "Teleported.");
+            }
         }
     }
 

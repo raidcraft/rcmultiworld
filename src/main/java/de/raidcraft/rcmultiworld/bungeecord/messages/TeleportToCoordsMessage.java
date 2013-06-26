@@ -83,7 +83,7 @@ public class TeleportToCoordsMessage extends BungeeMessage {
 
                 Location location = new Location(existingWorld, Double.parseDouble(x), Double.parseDouble(y), Double.parseDouble(z),
                         Float.parseFloat(yaw), Float.parseFloat(pitch));
-                if(teleportPlayer != null) {
+                if(teleportPlayer != null && !teleportPlayer.getWorld().getName().equalsIgnoreCase(existingWorld.getName())) {
                     teleportPlayer.teleport(location);
                     teleportPlayer.sendMessage(ChatColor.YELLOW + "Teleported.");
                 }
