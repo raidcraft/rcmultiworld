@@ -8,6 +8,10 @@ import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+
 /**
  * @author Philip
  */
@@ -22,14 +26,19 @@ public class BungeeListener implements PluginMessageListener {
         PlayerManager playerManager = plugin.getPlayerManager();
 
         // update player list
-        String message = BungeeCordUtil.decodeMessage(encoded, "PlayerList");
-        if(message != null) {
-            RaidCraft.LOGGER.info("DEBUG: " + message);
-            playerManager.updatePlayerList(message);
-            return;
+        try {
+        DataInputStream in = new DataInputStream(new ByteArrayInputStream(encoded));
+        String subchannel = in.readUTF();
+        if (subchannel.equals("PlayerList")) {
+            String server = in.readUTF();
+            String list = in.readUTF();
+            playerManager.updatePlayerList(list);
+        }
+        } catch (IOException e) {
         }
 
-        message = BungeeCordUtil.decodeMessage(encoded, bungeeManager.getBungeeChannel());
+        // custom channel message
+        String message = BungeeCordUtil.decodeMessage(encoded, bungeeManager.getBungeeChannel());
         if(message == null) return;
 
         bungeeManager.receiveMessage(message);
