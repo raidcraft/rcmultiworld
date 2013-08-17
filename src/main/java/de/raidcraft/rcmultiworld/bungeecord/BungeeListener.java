@@ -27,13 +27,13 @@ public class BungeeListener implements PluginMessageListener {
 
         // update player list
         try {
-        DataInputStream in = new DataInputStream(new ByteArrayInputStream(encoded));
-        String subchannel = in.readUTF();
-        if (subchannel.equals("PlayerList")) {
-            String server = in.readUTF();
-            String list = in.readUTF();
-            playerManager.updatePlayerList(list);
-        }
+            DataInputStream in = new DataInputStream(new ByteArrayInputStream(encoded));
+            String subchannel = in.readUTF();
+            if (subchannel.equals("PlayerList")) {
+                String server = in.readUTF();
+                String list = in.readUTF();
+                playerManager.updatePlayerList(list);
+            }
         } catch (IOException e) {
         }
 
