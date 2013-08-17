@@ -24,6 +24,7 @@ public class BungeeListener implements PluginMessageListener {
         // update player list
         String message = BungeeCordUtil.decodeMessage(encoded, "PlayerList");
         if(message != null) {
+            RaidCraft.LOGGER.info("DEBUG: " + message);
             playerManager.updatePlayerList(message);
             return;
         }
