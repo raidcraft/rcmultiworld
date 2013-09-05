@@ -18,6 +18,7 @@ import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -40,63 +41,83 @@ public class TeleportCommand {
          @CommandPermissions("rcmultiworld.tp")
          public void teleport(CommandContext context, CommandSender sender) throws CommandException {
 
-        Player player = (Player)sender;
-        RCMultiWorldPlugin plugin = RaidCraft.getComponent(RCMultiWorldPlugin.class);
+        if(sender instanceof Player) {
+            Player player = (Player)sender;
+            RCMultiWorldPlugin plugin = RaidCraft.getComponent(RCMultiWorldPlugin.class);
 
-        if(context.argsLength() == 1) {
-            // teleport to coordinates
-            if(context.getString(0).contains(",")) {
-                String[] coords = context.getString(0).split(",");
-                try {
-                    double x = Double.parseDouble(coords[0]);
-                    double y = Double.parseDouble(coords[1]);
-                    double z = Double.parseDouble(coords[2]);
-                    String world = player.getWorld().getName();
-                    if(coords.length > 3) {
-                        world = coords[3];
-                    }
+            if(context.argsLength() == 1) {
+                // teleport to coordinates
+                if(context.getString(0).contains(",")) {
+                    String[] coords = context.getString(0).split(",");
+                    try {
+                        double x = Double.parseDouble(coords[0]);
+                        double y = Double.parseDouble(coords[1]);
+                        double z = Double.parseDouble(coords[2]);
+                        String world = player.getWorld().getName();
+                        if(coords.length > 3) {
+                            world = coords[3];
+                        }
 
-                    if(world.equalsIgnoreCase(player.getWorld().getName())) {
-                        Location location = new Location(player.getWorld(), x, y, z);
-                        plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
-                        plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
-                        player.teleport(location);
+                        if(world.equalsIgnoreCase(player.getWorld().getName())) {
+                            Location location = new Location(player.getWorld(), x, y, z);
+                            plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
+                            plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
+                            player.teleport(location);
+                            sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
+                            player.sendMessage(ChatColor.YELLOW + "Teleported.");
+                        }
+                        else {
+                            String targetServer = RaidCraft.getTable(WorldInfoTable.class).getWorldHost(world);
+                            player.sendMessage(ChatColor.YELLOW + "Change to server: " + targetServer);
+                            BungeeCordUtil.changeServer(player, targetServer);
+                            plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(player.getName(),
+                                    world, coords[0], coords[1], coords[2], "0", "0"));
+                        }
                         sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
-                        player.sendMessage(ChatColor.YELLOW + "Teleported.");
+                        return;
                     }
-                    else {
-                        String targetServer = RaidCraft.getTable(WorldInfoTable.class).getWorldHost(world);
-                        player.sendMessage(ChatColor.YELLOW + "Change to server: " + targetServer);
-                        BungeeCordUtil.changeServer(player, targetServer);
-                        plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(player.getName(),
-                                world, coords[0], coords[1], coords[2], "0", "0"));
+                    catch(NumberFormatException | IndexOutOfBoundsException e) {
+                        throw new CommandException("Die Koordinaten haben das falsche Format! ('x,y,z' erwartet)");
                     }
+                }
+
+                // teleport to player
+                MultiWorldPlayer multiWorldPlayer = plugin.getPlayerManager().getPlayer(context.getString(0));
+                if(multiWorldPlayer == null || !multiWorldPlayer.isOnline()) {
+                    throw new CommandException("Kein passender Spieler gefunden.");
+                }
+
+                Player targetPlayer = Bukkit.getPlayer(multiWorldPlayer.getName());
+                if(targetPlayer != null) {
+                    plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
+                    plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
+                    player.teleport(targetPlayer);
                     sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
-                    return;
+                    player.sendMessage(ChatColor.YELLOW + "Teleported.");
                 }
-                catch(NumberFormatException | IndexOutOfBoundsException e) {
-                    throw new CommandException("Die Koordinaten haben das falsche Format! ('x,y,z' erwartet)");
+                else {
+                    plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
+                    plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
+                    FoundPlayersServerListener.registerAction(multiWorldPlayer.getName(), new TeleportOnServerFoundAction(player, plugin.getBungeeManager()));
+                    plugin.getBungeeManager().sendMessage(player, new FindPlayersServerMessage(multiWorldPlayer.getName()));
                 }
             }
+        }
+        // command block compatibility
+        if(sender instanceof BlockCommandSender) {
+            if(context.argsLength() == 4) {
 
-            MultiWorldPlayer multiWorldPlayer = plugin.getPlayerManager().getPlayer(context.getString(0));
-            if(multiWorldPlayer == null || !multiWorldPlayer.isOnline()) {
-                throw new CommandException("Kein passender Spieler gefunden.");
-            }
+                Player player = Bukkit.getPlayer(context.getString(0));
+                if(player == null) return;
+                String xS = context.getString(1);
+                String yS = context.getString(2);
+                String zS = context.getString(3);
 
-            Player targetPlayer = Bukkit.getPlayer(multiWorldPlayer.getName());
-            if(targetPlayer != null) {
-                plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
-                plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
-                player.teleport(targetPlayer);
-                sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
-                player.sendMessage(ChatColor.YELLOW + "Teleported.");
-            }
-            else {
-                plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
-                plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
-                FoundPlayersServerListener.registerAction(multiWorldPlayer.getName(), new TeleportOnServerFoundAction(player, plugin.getBungeeManager()));
-                plugin.getBungeeManager().sendMessage(player, new FindPlayersServerMessage(multiWorldPlayer.getName()));
+                int x = getCommandBlockTeleportCoordinate(player.getLocation().getBlockX(), xS);
+                int y = getCommandBlockTeleportCoordinate(player.getLocation().getBlockY(), yS);
+                int z = getCommandBlockTeleportCoordinate(player.getLocation().getBlockZ(), zS);
+
+                player.teleport(new Location(player.getWorld(), x, y, z));
             }
         }
     }
@@ -159,5 +180,23 @@ public class TeleportCommand {
         else {
             plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(player.getName(), serverLocation));
         }
+    }
+
+    private int getCommandBlockTeleportCoordinate(int playerCoord, String coordString) throws NumberFormatException {
+
+        int coord;
+        try{
+            coord = Integer.valueOf(coordString);
+        }
+        catch (NumberFormatException e) {
+            if(!coordString.startsWith("~")) throw new NumberFormatException();
+            try {
+                coord = Integer.parseInt(coordString.substring(1));
+                coord += playerCoord;
+            } catch (NumberFormatException e1) {
+                throw new NumberFormatException();
+            }
+        }
+        return coord;
     }
 }
