@@ -113,9 +113,9 @@ public class TeleportCommand {
                 String yS = context.getString(2);
                 String zS = context.getString(3);
 
-                int x = getCommandBlockTeleportCoordinate(player.getLocation().getBlockX(), xS);
-                int y = getCommandBlockTeleportCoordinate(player.getLocation().getBlockY(), yS);
-                int z = getCommandBlockTeleportCoordinate(player.getLocation().getBlockZ(), zS);
+                float x = getCommandBlockTeleportCoordinate(player.getLocation().getBlockX(), xS) + 0.5F;
+                float y = getCommandBlockTeleportCoordinate(player.getLocation().getBlockY(), yS);
+                float z = getCommandBlockTeleportCoordinate(player.getLocation().getBlockZ(), zS) + 0.5F;
 
                 player.teleport(new Location(player.getWorld(), x, y, z, player.getLocation().getYaw(), player.getLocation().getPitch()));
             }
