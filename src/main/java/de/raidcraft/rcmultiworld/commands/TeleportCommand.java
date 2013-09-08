@@ -113,9 +113,9 @@ public class TeleportCommand {
                 String yS = context.getString(2);
                 String zS = context.getString(3);
 
-                float x = getCommandBlockTeleportCoordinate(player.getLocation().getBlockX(), xS) + 0.5F;
-                float y = getCommandBlockTeleportCoordinate(player.getLocation().getBlockY(), yS);
-                float z = getCommandBlockTeleportCoordinate(player.getLocation().getBlockZ(), zS) + 0.5F;
+                double x = getCommandBlockTeleportCoordinate(COORDINATE.X, player.getLocation().getX(), xS);
+                double y = getCommandBlockTeleportCoordinate(COORDINATE.Y, player.getLocation().getY(), yS);
+                double z = getCommandBlockTeleportCoordinate(COORDINATE.Z, player.getLocation().getZ(), zS);
 
                 player.teleport(new Location(player.getWorld(), x, y, z, player.getLocation().getYaw(), player.getLocation().getPitch()));
             }
@@ -182,21 +182,30 @@ public class TeleportCommand {
         }
     }
 
-    private int getCommandBlockTeleportCoordinate(int playerCoord, String coordString) throws NumberFormatException {
+    private double getCommandBlockTeleportCoordinate(COORDINATE coordinate, double playerCoord, String coordString) throws NumberFormatException {
 
-        int coord;
+        double coord;
         try{
-            coord = Integer.valueOf(coordString);
+            coord = Double.valueOf(coordString);
+            if(coordinate != COORDINATE.Y) {
+                coord += 0.5;
+            }
         }
         catch (NumberFormatException e) {
             if(!coordString.startsWith("~")) throw new NumberFormatException();
             try {
-                coord = Integer.parseInt(coordString.substring(1));
+                coord = Double.parseDouble(coordString.substring(1));
                 coord += playerCoord;
             } catch (NumberFormatException e1) {
                 throw new NumberFormatException();
             }
         }
         return coord;
+    }
+
+    public enum COORDINATE {
+        X,
+        Y,
+        Z;
     }
 }
