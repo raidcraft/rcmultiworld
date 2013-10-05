@@ -1,6 +1,7 @@
 package de.raidcraft.rcmultiworld;
 
 import de.raidcraft.api.config.ConfigurationBase;
+import de.raidcraft.api.config.Setting;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -12,6 +13,11 @@ import java.util.Map;
 public class PluginConfiguration extends ConfigurationBase<RCMultiWorldPlugin> {
 
     private Map<String, String> worldAliases = new HashMap<>();
+
+    @Setting("shutdown-teleport")
+    public boolean shutdownTeleport = false;
+    @Setting("shutdown-teleport-server")
+    public String shutdownTeleportServer = "lobby";
 
     public PluginConfiguration(RCMultiWorldPlugin plugin) {
 

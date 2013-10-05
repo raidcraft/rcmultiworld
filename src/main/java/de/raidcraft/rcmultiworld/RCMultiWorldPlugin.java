@@ -11,8 +11,12 @@ import de.raidcraft.rcmultiworld.listener.PlayerListener;
 import de.raidcraft.rcmultiworld.players.PlayerManager;
 import de.raidcraft.rcmultiworld.restart.RestartManager;
 import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
+import de.raidcraft.util.BungeeCordUtil;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 /**
  * @author Philip
@@ -59,6 +63,14 @@ public class RCMultiWorldPlugin extends BasePlugin {
 
     @Override
     public void disable() {
+
+        if(getConfig().shutdownTeleport) {
+            for(Player player : Bukkit.getOnlinePlayers()) {
+                player.sendMessage(ChatColor.DARK_RED + "Dieser Server wird neugestartet...");
+                player.sendMessage(ChatColor.DARK_RED + "Du wirst deshalb auf den " + StringUtils.capitalize(getConfig().shutdownTeleportServer) + "-Server geportet!");
+                BungeeCordUtil.changeServer(player, getConfig().shutdownTeleportServer);
+            }
+        }
     }
 
     public PluginConfiguration getConfig() {
