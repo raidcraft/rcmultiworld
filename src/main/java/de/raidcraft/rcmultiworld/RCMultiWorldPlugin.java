@@ -66,9 +66,9 @@ public class RCMultiWorldPlugin extends BasePlugin {
 
         if(getConfig().shutdownTeleport) {
             for(Player player : Bukkit.getOnlinePlayers()) {
+                BungeeCordUtil.changeServer(player, getConfig().shutdownTeleportServer);
                 player.sendMessage(ChatColor.DARK_RED + "Dieser Server wird neugestartet...");
                 player.sendMessage(ChatColor.DARK_RED + "Du wirst deshalb auf den " + StringUtils.capitalize(getConfig().shutdownTeleportServer) + "-Server geportet!");
-                BungeeCordUtil.changeServer(player, getConfig().shutdownTeleportServer);
             }
         }
     }
