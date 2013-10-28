@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 /**
  * @author Philip Urban
  */
+@MessageName("CHANGE_SERVER")
 public class ChangeServerMessage extends BungeeMessage {
 
     private String targetPlayer;
