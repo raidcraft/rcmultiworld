@@ -60,6 +60,7 @@ public class TeleportRequestManager {
 
             player.teleport(tTeleportRequest.getBukkitLocation());
             player.sendMessage(ChatColor.YELLOW + "Teleported.");
+            RaidCraft.getDatabase(RCMultiWorldPlugin.class).delete(tTeleportRequest);
         }
     }
 }
