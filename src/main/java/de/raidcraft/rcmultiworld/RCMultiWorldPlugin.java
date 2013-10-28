@@ -10,11 +10,15 @@ import de.raidcraft.rcmultiworld.listener.FoundPlayersServerListener;
 import de.raidcraft.rcmultiworld.listener.PlayerListener;
 import de.raidcraft.rcmultiworld.players.PlayerManager;
 import de.raidcraft.rcmultiworld.restart.RestartManager;
+import de.raidcraft.rcmultiworld.tables.TTeleportRequest;
 import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
 import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Philip
@@ -24,6 +28,7 @@ public class RCMultiWorldPlugin extends BasePlugin {
     private BungeeManager bungeeManager;
     private PlayerManager playerManager;
     private RestartManager restartManager;
+    private TeleportRequestManager teleportRequestManager;
     private PluginConfiguration config;
 
     @Override
@@ -43,6 +48,7 @@ public class RCMultiWorldPlugin extends BasePlugin {
         this.bungeeManager = new BungeeManager(this, getDescription().getName());
         this.playerManager = new PlayerManager(this);
         this.restartManager = new RestartManager(this);
+        this.teleportRequestManager = new TeleportRequestManager(this);
 
         reload();
     }
@@ -70,6 +76,15 @@ public class RCMultiWorldPlugin extends BasePlugin {
         }
     }
 
+    @Override
+    public List<Class<?>> getDatabaseClasses() {
+
+        List<Class<?>> databases = new ArrayList<>();
+        databases.add(TTeleportRequest.class);
+
+        return databases;
+    }
+
     public PluginConfiguration getConfig() {
 
         return config;
@@ -88,5 +103,9 @@ public class RCMultiWorldPlugin extends BasePlugin {
     public RestartManager getRestartManager() {
 
         return restartManager;
+    }
+
+    public TeleportRequestManager getTeleportRequestManager() {
+        return teleportRequestManager;
     }
 }
