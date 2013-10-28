@@ -51,11 +51,10 @@ public class BungeeManager {
 
         registerBungeeMessage(ExecuteCommandMessage.class);
         registerBungeeMessage(BroadcastMessage.class);
-        registerBungeeMessage(TeleportToCoordsMessage.class);
-        registerBungeeMessage(TeleportToPlayerMessage.class);
         registerBungeeMessage(FindPlayersServerMessage.class);
         registerBungeeMessage(SendPlayersServerMessage.class);
         registerBungeeMessage(SaveReturnLocationMessage.class);
+        registerBungeeMessage(ChangeServerMessage.class);
     }
 
     public void registerBungeeMessage(Class<? extends BungeeMessage> clazz) {

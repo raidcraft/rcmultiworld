@@ -6,9 +6,9 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
+import de.raidcraft.rcmultiworld.bungeecord.messages.ChangeServerMessage;
 import de.raidcraft.rcmultiworld.bungeecord.messages.FindPlayersServerMessage;
 import de.raidcraft.rcmultiworld.bungeecord.messages.SaveReturnLocationMessage;
-import de.raidcraft.rcmultiworld.bungeecord.messages.TeleportToCoordsMessage;
 import de.raidcraft.rcmultiworld.listener.FoundPlayersServerListener;
 import de.raidcraft.rcmultiworld.players.MultiWorldPlayer;
 import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
@@ -69,9 +69,10 @@ public class TeleportCommand {
                         else {
                             String targetServer = RaidCraft.getTable(WorldInfoTable.class).getWorldHost(world);
                             player.sendMessage(ChatColor.YELLOW + "Change to server: " + targetServer);
+                            plugin.getTeleportRequestManager()
+                                    .addRequest(player.getName(),
+                                            world, x, y, z, 0, 0);
                             BungeeCordUtil.changeServer(player, targetServer);
-                            plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(player.getName(),
-                                    world, coords[0], coords[1], coords[2], "0", "0"));
                         }
                         sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
                         return;
@@ -150,8 +151,12 @@ public class TeleportCommand {
                 return;
             }
 
-            plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(context.getString(0),
-                    new ServerLocation(player.getLocation())));
+            plugin.getTeleportRequestManager()
+                    .addRequest(player.getName(),
+                            player.getWorld().getName(), player.getLocation().getX(), player.getLocation().getY(),
+                            player.getLocation().getZ(), player.getLocation().getPitch(), player.getLocation().getYaw());
+            plugin.getBungeeManager().sendMessage(player, new ChangeServerMessage(multiWorldPlayer.getName(), Bukkit.getWorlds().get(0).getName()));
+
         }
     }
 
@@ -178,7 +183,11 @@ public class TeleportCommand {
             player.sendMessage(ChatColor.YELLOW + "Teleported.");
         }
         else {
-            plugin.getBungeeManager().sendMessage(player, new TeleportToCoordsMessage(player.getName(), serverLocation));
+
+            plugin.getTeleportRequestManager()
+                    .addRequest(player.getName(), serverLocation.getServer(), serverLocation.getX(), serverLocation.getY(),
+                            serverLocation.getZ(), serverLocation.getPitch(), serverLocation.getYaw());
+            BungeeCordUtil.changeServer(player, serverLocation.getServer());
         }
     }
 

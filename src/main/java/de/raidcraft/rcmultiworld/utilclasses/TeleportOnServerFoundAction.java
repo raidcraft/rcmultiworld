@@ -1,7 +1,8 @@
 package de.raidcraft.rcmultiworld.utilclasses;
 
+import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.BungeeManager;
-import de.raidcraft.rcmultiworld.bungeecord.messages.TeleportToPlayerMessage;
+import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
 import de.raidcraft.rcmultiworld.events.FoundPlayersServerEvent;
 import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.entity.Player;
@@ -23,7 +24,8 @@ public class TeleportOnServerFoundAction extends FoundPlayersServerAction {
     @Override
     public void process(FoundPlayersServerEvent event) {
 
-        bungeeManager.sendMessage(player, new TeleportToPlayerMessage(player.getName(), event.getPlayer()));
+        RaidCraft.getComponent(RCMultiWorldPlugin.class).getTeleportRequestManager()
+                .addRequest(player.getName(), event.getWorld(), event.getX(), event.getY(), event.getZ(), event.getPitch(), event.getYaw());
         BungeeCordUtil.changeServer(player, event.getServer());
     }
 }

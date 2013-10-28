@@ -1,5 +1,8 @@
 package de.raidcraft.rcmultiworld.tables;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -87,5 +90,10 @@ public class TTeleportRequest {
 
     public void setYaw(int yaw) {
         this.yaw = yaw;
+    }
+
+    public Location getBukkitLocation() {
+
+        return new Location(Bukkit.getWorld(world), (double)x / 100., (double)y / 100., (double)z / 100., (float)yaw / 100F, (float)pitch / 100F);
     }
 }
