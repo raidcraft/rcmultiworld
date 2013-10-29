@@ -3,6 +3,7 @@ package de.raidcraft.rcmultiworld.listener;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -17,7 +18,7 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
 
         event.setJoinMessage(null);
-        RaidCraft.getComponent(RCMultiWorldPlugin.class).getTeleportRequestManager().teleportOnRequest(event.getPlayer());
+        Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RCMultiWorldPlugin.class), new DelayedChecker(event.getPlayer()), 10L);
     }
 
     @EventHandler
@@ -29,6 +30,22 @@ public class PlayerListener implements Listener {
         }
 
         event.setQuitMessage(null);
+    }
+
+    public class DelayedChecker implements Runnable {
+
+        private Player player;
+
+        public DelayedChecker(Player player) {
+
+            this.player = player;
+        }
+
+        @Override
+        public void run() {
+
+            RaidCraft.getComponent(RCMultiWorldPlugin.class).getTeleportRequestManager().teleportOnRequest(player);
+        }
     }
 
 }
