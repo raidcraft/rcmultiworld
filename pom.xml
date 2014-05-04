@@ -21,7 +21,7 @@
     <groupId>de.raidcraft</groupId>
     <artifactId>rcmultiworld</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.5-SNAPSHOT</version>
+    <version>1.1.5</version>
     <name>RCMultiWorld</name>
 
     <parent>
@@ -32,7 +32,8 @@
     
     <scm>
         <developerConnection>scm:git:ssh://git@raid-craft.de:22109/raid-craft-de/${project.artifactId}.git</developerConnection>
-    </scm>
+      <tag>rcmultiworld-1.1.5</tag>
+  </scm>
 
     <repositories>
         <repository>
