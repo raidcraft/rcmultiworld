@@ -27,8 +27,12 @@
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
-        <version>LATEST</version>
+        <version>RELEASE</version>
     </parent>
+    
+    <scm>
+        <developerConnection>scm:git:ssh://git@raid-craft.de:22109/raid-craft-de/${project.artifactId}.git</developerConnection>
+    </scm>
 
     <repositories>
         <repository>
@@ -41,7 +45,7 @@
         <dependency>
             <groupId>de.raidcraft</groupId>
             <artifactId>raidcraft-api</artifactId>
-            <version>LATEST</version>
+            <version>${rc.version}</version>
         </dependency>
     </dependencies>
 </project>
