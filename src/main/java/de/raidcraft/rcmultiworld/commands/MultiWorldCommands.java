@@ -1,9 +1,13 @@
 package de.raidcraft.rcmultiworld.commands;
 
-import com.sk89q.minecraft.util.commands.*;
+import com.sk89q.minecraft.util.commands.Command;
+import com.sk89q.minecraft.util.commands.CommandContext;
+import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissions;
+import com.sk89q.minecraft.util.commands.NestedCommand;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
-import org.bukkit.ChatColor;
+import de.raidcraft.reference.Colors;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -22,16 +26,17 @@ public class MultiWorldCommands {
             desc = "Main command"
     )
     @NestedCommand(NestedLootCommands.class)
-    public void rcmultiworld(CommandContext context, CommandSender sender) throws CommandException {
+    public void rcmultiworld(final CommandContext context, final CommandSender sender) throws CommandException {
+
     }
 
     public static class NestedLootCommands {
 
-        private final RCMultiWorldPlugin module;
+        private final RCMultiWorldPlugin plugin;
 
-        public NestedLootCommands(RCMultiWorldPlugin module) {
+        public NestedLootCommands(final RCMultiWorldPlugin plugin) {
 
-            this.module = module;
+            this.plugin = plugin;
         }
 
         @Command(
@@ -39,10 +44,14 @@ public class MultiWorldCommands {
                 desc = "Reloads config and shit"
         )
         @CommandPermissions("rcmultiworld.reload")
-        public void reload(CommandContext context, CommandSender sender) throws CommandException {
+        public void reload(final CommandContext context, final CommandSender sender) throws CommandException {
 
             RaidCraft.getComponent(RCMultiWorldPlugin.class).reload();
-            sender.sendMessage(ChatColor.GREEN + "RCMultiWorld wurde neugeladen!");
+            this.plugin.getTranslationProvider().msg(
+                    sender,
+                    "command.reload.success",
+                    "%1$s[RCMultiWorld] Reload complete.",
+                    Colors.Chat.SUCCESS);
         }
     }
 }

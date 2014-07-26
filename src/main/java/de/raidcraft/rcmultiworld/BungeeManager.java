@@ -1,6 +1,13 @@
 package de.raidcraft.rcmultiworld;
 
-import de.raidcraft.rcmultiworld.bungeecord.messages.*;
+import de.raidcraft.rcmultiworld.bungeecord.messages.BroadcastMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.BungeeMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.ChangeServerMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.ExecuteCommandMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.FindPlayersServerMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.MessageName;
+import de.raidcraft.rcmultiworld.bungeecord.messages.SaveReturnLocationMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.SendPlayersServerMessage;
 import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,34 +24,39 @@ import java.util.regex.Pattern;
  */
 public class BungeeManager {
 
-    public static final Pattern MESSAGE_NAME_PATTERN = Pattern.compile("^([\\d]+)#([\\w]+)#(.+)$");
     public static final String DELIMITER = "#@#";
 
-    private final RCMultiWorldPlugin plugin;
+    private static final int INTERVAL_MULTIPLICATION_FACTOR = 20;
+    private static final Pattern MESSAGE_NAME_PATTERN = Pattern.compile("^([\\d]+)#([\\w]+)#(.+)$");
+
+
     private final String bungeeChannel;
     private final Map<String, Class<? extends BungeeMessage>> registeredMessages = new HashMap<>();
 
-    protected BungeeManager(RCMultiWorldPlugin plugin, String bungeeChannel) {
+    protected BungeeManager(final RCMultiWorldPlugin plugin, final String bungeeChannel) {
 
-        this.plugin = plugin;
         this.bungeeChannel = bungeeChannel;
         registerInhouseMessages();
 
         // update player list frequently
-        Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
-            @Override
-            public void run() {
+        Bukkit.getScheduler().runTaskTimer(
+                plugin,
+                () -> {
 
-                if (Bukkit.getOnlinePlayers().length == 0) return;
+                    if (Bukkit.getOnlinePlayers().isEmpty()) {
+                        return;
+                    }
 
-                BungeeCordUtil.getPlayerList(Bukkit.getOnlinePlayers()[0]);
-            }
-        }, 20, plugin.getConfig().getUpdateInterval() * 20);
+                    BungeeCordUtil.getPlayerList(Bukkit.getOnlinePlayers().iterator().next());
+                },
+                Math.max(1, plugin.getConfig().getUpdateInterval()) * INTERVAL_MULTIPLICATION_FACTOR,
+                Math.max(1, plugin.getConfig().getUpdateInterval()) * INTERVAL_MULTIPLICATION_FACTOR
+        );
     }
 
     public String getBungeeChannel() {
 
-        return bungeeChannel;
+        return this.bungeeChannel;
     }
 
     private void registerInhouseMessages() {
@@ -57,48 +69,53 @@ public class BungeeManager {
         registerBungeeMessage(ChangeServerMessage.class);
     }
 
-    public void registerBungeeMessage(Class<? extends BungeeMessage> clazz) {
+    public void registerBungeeMessage(final Class<? extends BungeeMessage> clazz) {
 
         if (clazz.isAnnotationPresent(MessageName.class)) {
-            registeredMessages.put(clazz.getAnnotation(MessageName.class).value(), clazz);
+            this.registeredMessages.put(clazz.getAnnotation(MessageName.class).value(), clazz);
         }
     }
 
-    public void sendMessage(Player player, BungeeMessage bungeeMessage) {
+    public void sendMessage(final Player player, final BungeeMessage bungeeMessage) {
 
-        BungeeCordUtil.sendPluginMessage(player, bungeeChannel, bungeeMessage.getEncoded());
+        BungeeCordUtil.sendPluginMessage(player, this.bungeeChannel, bungeeMessage.getEncoded());
     }
 
-    public void receiveMessage(String encoded) {
+    public void receiveMessage(final String encoded) {
 
-        Matcher matcher = MESSAGE_NAME_PATTERN.matcher(encoded);
-        if (matcher.matches()) {
-            long timestamp = Long.parseLong(matcher.group(1));
-            // check for timeout
-            if(System.currentTimeMillis() - timestamp > 3*1000) {
-                return;
-            }
-            String messageName = matcher.group(2);
-            String[] args = matcher.group(3).split(DELIMITER);
-            if (registeredMessages.containsKey(messageName)) {
-                Class<? extends BungeeMessage> aClass = registeredMessages.get(messageName);
-                for (Constructor<?> constructor : aClass.getDeclaredConstructors()) {
-                    if (constructor.getParameterTypes().length == args.length) {
-                        boolean match = true;
-                        for (Class<?> param : constructor.getParameterTypes()) {
-                            if (!String.class.isAssignableFrom(param)) {
-                                match = false;
-                                break;
-                            }
-                        }
-                        if (match) {
-                            try {
-                                BungeeMessage bungeeMessage = (BungeeMessage) constructor.newInstance(args);
-                                bungeeMessage.process();
-                            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                                e.printStackTrace();
-                            }
-                        }
+        final Matcher matcher = MESSAGE_NAME_PATTERN.matcher(encoded);
+        if (!matcher.matches()) {
+            return;
+        }
+
+        final long timestamp = Long.parseLong(matcher.group(1));
+        // check for timeout
+        if ((System.currentTimeMillis() - timestamp) > (3 * 1000)) {
+            return;
+        }
+
+        final String messageName = matcher.group(2);
+        final String[] args = matcher.group(3).split(DELIMITER);
+        if (!this.registeredMessages.containsKey(messageName)) {
+            return;
+        }
+
+        final Class<? extends BungeeMessage> aClass = this.registeredMessages.get(messageName);
+        for (final Constructor<?> constructor : aClass.getDeclaredConstructors()) {
+            if (constructor.getParameterTypes().length == args.length) {
+                boolean match = true;
+                for (final Class<?> param : constructor.getParameterTypes()) {
+                    if (!String.class.isAssignableFrom(param)) {
+                        match = false;
+                        break;
+                    }
+                }
+                if (match) {
+                    try {
+                        final BungeeMessage bungeeMessage = (BungeeMessage) constructor.newInstance(args);
+                        bungeeMessage.process();
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        e.printStackTrace();
                     }
                 }
             }

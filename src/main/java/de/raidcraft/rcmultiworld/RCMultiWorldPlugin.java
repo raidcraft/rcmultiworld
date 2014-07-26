@@ -13,6 +13,7 @@ import de.raidcraft.rcmultiworld.restart.RestartManager;
 import de.raidcraft.rcmultiworld.tables.TTeleportRequest;
 import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
 import de.raidcraft.util.BungeeCordUtil;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -23,6 +24,7 @@ import java.util.List;
 /**
  * @author Philip
  */
+@Getter
 public class RCMultiWorldPlugin extends BasePlugin {
 
     private BungeeManager bungeeManager;
@@ -44,8 +46,8 @@ public class RCMultiWorldPlugin extends BasePlugin {
 
         Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
 
-        config = configure(new PluginConfiguration(this), false);
-        this.bungeeManager = new BungeeManager(this, getDescription().getName());
+        this.config = this.configure(new PluginConfiguration(this));
+        this.bungeeManager = new BungeeManager(this, this.getDescription().getName());
         this.playerManager = new PlayerManager(this);
         this.restartManager = new RestartManager(this);
         this.teleportRequestManager = new TeleportRequestManager(this);
@@ -56,11 +58,11 @@ public class RCMultiWorldPlugin extends BasePlugin {
     @Override
     public void reload() {
 
-        restartManager.reload();
-        config.reload();
+        this.restartManager.reload();
+        this.config.reload();
 
-        String mainWorld = Bukkit.getWorlds().get(0).getName();
-        for(World world : Bukkit.getWorlds()) {
+        final String mainWorld = Bukkit.getWorlds().get(0).getName();
+        for (final World world : Bukkit.getWorlds()) {
             RaidCraft.getTable(WorldInfoTable.class).addWorld(mainWorld, world.getName());
         }
     }
@@ -68,8 +70,8 @@ public class RCMultiWorldPlugin extends BasePlugin {
     @Override
     public void disable() {
 
-        if(getConfig().shutdownTeleport) {
-            for(Player player : Bukkit.getOnlinePlayers()) {
+        if (getConfig().shutdownTeleport) {
+            for (final Player player : Bukkit.getOnlinePlayers()) {
                 BungeeCordUtil.changeServer(player, getConfig().shutdownTeleportServer);
                 // chat messages not possible here!!!
             }
@@ -79,33 +81,9 @@ public class RCMultiWorldPlugin extends BasePlugin {
     @Override
     public List<Class<?>> getDatabaseClasses() {
 
-        List<Class<?>> databases = new ArrayList<>();
+        final List<Class<?>> databases = new ArrayList<>();
         databases.add(TTeleportRequest.class);
 
         return databases;
-    }
-
-    public PluginConfiguration getConfig() {
-
-        return config;
-    }
-
-    public BungeeManager getBungeeManager() {
-
-        return bungeeManager;
-    }
-
-    public PlayerManager getPlayerManager() {
-
-        return playerManager;
-    }
-
-    public RestartManager getRestartManager() {
-
-        return restartManager;
-    }
-
-    public TeleportRequestManager getTeleportRequestManager() {
-        return teleportRequestManager;
     }
 }

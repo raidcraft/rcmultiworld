@@ -1,80 +1,88 @@
 package de.raidcraft.rcmultiworld.players;
 
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import de.raidcraft.reference.Colors;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Philip
  */
 public class PlayerManager {
 
-    private Map<String, MultiWorldPlayer> players = new HashMap<>();
-    private RCMultiWorldPlugin plugin;
+    private final RCMultiWorldPlugin plugin;
+    private final Map<String, MultiWorldPlayer> players = new HashMap<>();
 
-    public PlayerManager(RCMultiWorldPlugin plugin) {
+    public PlayerManager(final RCMultiWorldPlugin plugin) {
 
         this.plugin = plugin;
     }
 
-    public void updatePlayerList(String playerList) {
+    public void updatePlayerList(final String playerList) {
 
-        List<String> newPlayers = new ArrayList<>(Arrays.asList(playerList.split(", ")));
-        Map<String, MultiWorldPlayer> oldPlayers = new HashMap<>(players);
-        for(Map.Entry<String, MultiWorldPlayer> entry : players.entrySet()) {
-            if(!entry.getValue().isOnline()) {
+        final List<String> newPlayers = new ArrayList<>(Arrays.asList(playerList.split(", ")));
+        final Map<String, MultiWorldPlayer> oldPlayers = new HashMap<>(this.players);
+        for (final Map.Entry<String, MultiWorldPlayer> entry : this.players.entrySet()) {
+            if (!entry.getValue().isOnline()) {
                 oldPlayers.remove(entry.getKey());
                 continue;
             }
-            if(newPlayers.contains(entry.getKey())) {
+            if (newPlayers.contains(entry.getKey())) {
                 newPlayers.remove(entry.getKey());
                 oldPlayers.remove(entry.getKey());
             }
         }
 
-        for(String player : newPlayers) {
-            join(player);
-        }
-        for(Map.Entry<String, MultiWorldPlayer> entry : oldPlayers.entrySet()) {
-            if(!entry.getValue().isOnline()) continue;
-            leave(entry.getKey());
-        }
+        newPlayers.forEach(this::join);
+        oldPlayers.entrySet().stream().filter(entry -> entry.getValue().isOnline()).forEach(entry -> leave(entry.getKey()));
     }
 
-    public void join(String player) {
+    public void join(final String player) {
 
-        Bukkit.broadcastMessage(ChatColor.YELLOW + player + " hat sich eingeloggt.");
-        if(!players.containsKey(player)) {
-            players.put(player, new MultiWorldPlayer(player));
+        this.plugin.getTranslationProvider().broadcastMessage(
+                "player.login.broadcast",
+                "%1$s Player %2$s connected.",
+                Colors.Chat.INFO,
+                player
+        );
+        if (!this.players.containsKey(player)) {
+            this.players.put(player, new MultiWorldPlayer(player));
         }
-        players.get(player).setOnline(true);
+        this.players.get(player).setOnline(true);
     }
 
-    public void leave(String player) {
+    public void leave(final String player) {
 
-        Bukkit.broadcastMessage(ChatColor.YELLOW + player + " hat das Spiel verlassen.");
-        players.get(player).setOnline(false);
+        this.plugin.getTranslationProvider().broadcastMessage(
+                "player.logout.broadcast",
+                "%1$s Player %2$s disconnected.",
+                Colors.Chat.INFO,
+                player
+        );
+        // TODO: Für was werden offline Spieler benötigt?
+        this.players.get(player).setOnline(false);
     }
 
     public void clear() {
-        players.clear();
+
+        this.players.clear();
     }
 
-    public boolean isOnline(String player) {
+    public boolean isOnline(final String player) {
 
-        MultiWorldPlayer multiWorldPlayer = getPlayer(player);
-        if(multiWorldPlayer == null || !multiWorldPlayer.isOnline()) {
-            return false;
-        }
-        return true;
+        final MultiWorldPlayer multiWorldPlayer = getPlayer(player);
+        return (multiWorldPlayer != null) && multiWorldPlayer.isOnline();
     }
 
-    public MultiWorldPlayer getPlayer(String player) {
+    public MultiWorldPlayer getPlayer(final String player) {
 
-        for(Map.Entry<String, MultiWorldPlayer> entry : players.entrySet()) {
-            if(entry.getKey().toLowerCase().startsWith(player.toLowerCase())) {
+        for (final Map.Entry<String, MultiWorldPlayer> entry : this.players.entrySet()) {
+            if (entry.getKey().toLowerCase().startsWith(player.toLowerCase())) {
                 return entry.getValue();
             }
         }
@@ -83,12 +91,9 @@ public class PlayerManager {
 
     public List<MultiWorldPlayer> getOnlinePlayers() {
 
-        List<MultiWorldPlayer> onlinePlayers = new ArrayList<>();
-        for(Map.Entry<String, MultiWorldPlayer> entry : players.entrySet()) {
-            if(entry.getValue().isOnline()) {
-                onlinePlayers.add(entry.getValue());
-            }
-        }
-        return onlinePlayers;
+        return this.players.entrySet().stream()
+                .filter(entry -> entry.getValue().isOnline())
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
     }
 }

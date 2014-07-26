@@ -1,11 +1,11 @@
-package de.raidcraft.rcmultiworld.restart;
+package de.raidcraft.rcmultiworld.commands;
 
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
-import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
+import de.raidcraft.reference.Colors;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -14,8 +14,11 @@ import org.bukkit.command.CommandSender;
  */
 public class RestartCommands {
 
-    public RestartCommands(RCMultiWorldPlugin module) {
+    private final RCMultiWorldPlugin plugin;
 
+    public RestartCommands(final RCMultiWorldPlugin plugin) {
+
+        this.plugin = plugin;
     }
 
     @Command(
@@ -23,12 +26,18 @@ public class RestartCommands {
             desc = "Server restart",
             flags = "ai"
     )
-     @CommandPermissions("rcmultiworld.restart")
-     public void restart(CommandContext context, CommandSender sender) throws CommandException {
+    @CommandPermissions("rcmultiworld.restart")
+    public void restart(final CommandContext context, final CommandSender sender) throws CommandException {
 
-        RCMultiWorldPlugin plugin = RaidCraft.getComponent(RCMultiWorldPlugin.class);
-        plugin.getRestartManager().setNextRestart(System.currentTimeMillis() + plugin.getRestartManager().getConfig().restartDelay * 1000);
-        sender.sendMessage(ChatColor.YELLOW + "Neustart wird ausgeführt!");
+        final long restartDelay = this.plugin.getRestartManager().getConfig().restartDelay * 1000;
+        this.plugin.getRestartManager().setNextRestart(System.currentTimeMillis() + restartDelay);
+
+        this.plugin.getTranslationProvider().msg(
+                sender,
+                "command.restart.success",
+                "%1$sThe Server will be restarted.",
+                Colors.Chat.SUCCESS
+        );
     }
 
     @Command(

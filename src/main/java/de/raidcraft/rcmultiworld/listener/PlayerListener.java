@@ -15,17 +15,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerListener implements Listener {
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(final PlayerJoinEvent event) {
 
         event.setJoinMessage(null);
         Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RCMultiWorldPlugin.class), new DelayedChecker(event.getPlayer()), 10L);
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuit(final PlayerQuitEvent event) {
 
         // clear list if last player leave
-        if(Bukkit.getOnlinePlayers().length == 1) {
+        if(Bukkit.getOnlinePlayers().size() == 1) {
             RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().clear();
         }
 
@@ -34,9 +34,9 @@ public class PlayerListener implements Listener {
 
     public class DelayedChecker implements Runnable {
 
-        private Player player;
+        private final Player player;
 
-        public DelayedChecker(Player player) {
+        public DelayedChecker(final Player player) {
 
             this.player = player;
         }
@@ -44,7 +44,7 @@ public class PlayerListener implements Listener {
         @Override
         public void run() {
 
-            RaidCraft.getComponent(RCMultiWorldPlugin.class).getTeleportRequestManager().teleportOnRequest(player);
+            RaidCraft.getComponent(RCMultiWorldPlugin.class).getTeleportRequestManager().teleportOnRequest(this.player);
         }
     }
 

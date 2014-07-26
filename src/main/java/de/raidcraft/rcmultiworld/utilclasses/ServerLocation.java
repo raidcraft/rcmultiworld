@@ -1,5 +1,6 @@
 package de.raidcraft.rcmultiworld.utilclasses;
 
+import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -7,6 +8,7 @@ import org.bukkit.World;
 /**
  * @author Philip
  */
+@Data
 public class ServerLocation {
 
     private String server;
@@ -16,7 +18,7 @@ public class ServerLocation {
     private float yaw;
     private float pitch;
 
-    public ServerLocation(String server, double x, double y, double z, float yaw, float pitch) {
+    public ServerLocation(final String server, final double x, final double y, final double z, final float yaw, final float pitch) {
 
         this.server = server;
         this.x = x;
@@ -26,7 +28,7 @@ public class ServerLocation {
         this.pitch = pitch;
     }
 
-    public ServerLocation(String server, double x, double y, double z) {
+    public ServerLocation(final String server, final double x, final double y, final double z) {
 
         this.server = server;
         this.x = x;
@@ -36,7 +38,7 @@ public class ServerLocation {
         this.pitch = 0;
     }
 
-    public ServerLocation(Location location) {
+    public ServerLocation(final Location location) {
 
         this.server = location.getWorld().getName();
         this.x = location.getX();
@@ -48,72 +50,17 @@ public class ServerLocation {
 
     public Location getBukkitLocation() {
 
-        for(World bukkitWorld : Bukkit.getWorlds()) {
-            if(bukkitWorld.getName().equalsIgnoreCase(server)) {
+        for(final World bukkitWorld : Bukkit.getWorlds()) {
+            if(bukkitWorld.getName().equalsIgnoreCase(this.server)) {
 
-                return new Location(bukkitWorld, x, y, z, yaw, pitch);
+                return new Location(bukkitWorld, this.x, this.y, this.z, this.yaw, this.pitch);
             }
         }
         return null;
     }
 
-    public void setServer(String server) {
+    public void setServer(final String server) {
 
         this.server = server;
-    }
-
-    public void setX(double x) {
-
-        this.x = x;
-    }
-
-    public void setY(double y) {
-
-        this.y = y;
-    }
-
-    public void setZ(double z) {
-
-        this.z = z;
-    }
-
-    public void setYaw(float yaw) {
-
-        this.yaw = yaw;
-    }
-
-    public void setPitch(float pitch) {
-
-        this.pitch = pitch;
-    }
-
-    public String getServer() {
-
-        return server;
-    }
-
-    public double getX() {
-
-        return x;
-    }
-
-    public double getY() {
-
-        return y;
-    }
-
-    public double getZ() {
-
-        return z;
-    }
-
-    public float getYaw() {
-
-        return yaw;
-    }
-
-    public float getPitch() {
-
-        return pitch;
     }
 }

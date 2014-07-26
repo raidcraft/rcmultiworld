@@ -16,24 +16,61 @@
   ~ along with this program. If not, see <http://www.gnu.org/licenses />.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>de.raidcraft</groupId>
-    <artifactId>rcmultiworld</artifactId>
-    <packaging>jar</packaging>
-    <version>1.1.6-SNAPSHOT</version>
-    <name>RCMultiWorld</name>
 
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
         <version>RELEASE</version>
     </parent>
-    
+
+    <packaging>jar</packaging>
+
+    <artifactId>rcmultiworld</artifactId>
+    <version>1.1.6-develop-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <!-- +++++++++++++++++++++++++
+        Project Information
+         +++++++++++++++++++++++++ -->
+
+    <name>RCMultiWorld</name>
+
+    <description>
+        Provides multiworld support.
+    </description>
+
+    <url>http://www.raid-craft.de/</url>
+    <inceptionYear>2013</inceptionYear>
+
+    <organization>
+        <name>Raid-Craft</name>
+        <url>http://www.raid-craft.de/</url>
+    </organization>
+
+    <!-- +++++++++++++++++++++++++
+        Environment Settings
+         +++++++++++++++++++++++++ -->
+
+    <issueManagement>
+        <system>Redmine</system>
+        <url>http://issues.raid-craft.de/</url>
+    </issueManagement>
+
     <scm>
+        <connection>scm:git:ssh://git@raid-craft.de:22109/raid-craft-de/${project.artifactId}.git</connection>
         <developerConnection>scm:git:ssh://git@raid-craft.de:22109/raid-craft-de/${project.artifactId}.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <url>http://git.raid-craft.de/raid-craft-de/${project.artifactId</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <repositories>
         <repository>
@@ -42,6 +79,10 @@
         </repository>
     </repositories>
 
+    <!-- +++++++++++++++++++++++++
+        Dependencies
+         +++++++++++++++++++++++++ -->
+
     <dependencies>
         <dependency>
             <groupId>de.raidcraft</groupId>
@@ -49,4 +90,8 @@
             <version>${rc.version}</version>
         </dependency>
     </dependencies>
+
+    <!-- +++++++++++++++++++++++++
+        Build
+         +++++++++++++++++++++++++ -->
 </project>

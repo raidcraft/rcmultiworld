@@ -4,6 +4,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
+ * TODO: Check if it is still in use.
+ *
  * @author Philip
  */
 public class LocatablePlayer implements Locatable {

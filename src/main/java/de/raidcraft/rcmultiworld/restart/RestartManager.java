@@ -1,33 +1,34 @@
 package de.raidcraft.rcmultiworld.restart;
 
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
+import de.raidcraft.rcmultiworld.commands.RestartCommands;
+import de.raidcraft.reference.Colors;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 /**
  * @author Philip
  */
 public class RestartManager {
 
-    private RCMultiWorldPlugin plugin;
-    private RestartConfig config;
+    private final RCMultiWorldPlugin plugin;
+    private final RestartConfig config;
     private long nextRestart = -1;
-    private ShutdownInfoTask infoTask;
+    private final ShutdownInfoTask infoTask;
 
-    public RestartManager(RCMultiWorldPlugin plugin) {
+    public RestartManager(final RCMultiWorldPlugin plugin) {
 
         this.plugin = plugin;
         plugin.registerCommands(RestartCommands.class);
-        config = plugin.configure(new RestartConfig(plugin));
-        infoTask = new ShutdownInfoTask(this);
-        Bukkit.getScheduler().runTaskTimer(plugin, infoTask, 20, 20);
+        this.config = plugin.configure(new RestartConfig(plugin));
+        this.infoTask = new ShutdownInfoTask(this);
+        Bukkit.getScheduler().runTaskTimer(plugin, this.infoTask, 20, 20);
         reload();
     }
 
     public void reload() {
 
-        config.reload();
-        infoTask.reload();
+        this.config.reload();
+        this.infoTask.reload();
     }
 
     public RestartConfig getConfig() {
@@ -40,14 +41,18 @@ public class RestartManager {
         return nextRestart;
     }
 
-    public void setNextRestart(long nextRestart) {
+    public void setNextRestart(final long nextRestart) {
 
         this.nextRestart = nextRestart;
     }
 
     public void restart() {
 
-        Bukkit.broadcastMessage(ChatColor.GOLD + "** " + ChatColor.DARK_RED + "Server wird neugestartet " + ChatColor.GOLD + "**");
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), config.localRestartCommand);
+        this.plugin.getTranslationProvider().broadcastMessage(
+                "server.restart.warning",
+                "%1$s** Server will be restarted **",
+                Colors.Chat.WARNING
+        );
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), this.config.localRestartCommand);
     }
 }

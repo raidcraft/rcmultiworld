@@ -4,16 +4,16 @@ import de.raidcraft.rcmultiworld.events.FoundPlayersServerEvent;
 
 public abstract class FoundPlayersServerAction {
 
-    private long timestamp;
+    private final long timestamp;
 
     public FoundPlayersServerAction() {
 
-        timestamp = System.currentTimeMillis();
+        this.timestamp = System.currentTimeMillis();
     }
 
     public boolean isExpired() {
 
-        if (timestamp < System.currentTimeMillis() - 3 * 1000) {
+        if (this.timestamp < (System.currentTimeMillis() - (3 * 1000))) {
             return true;
         }
         return false;

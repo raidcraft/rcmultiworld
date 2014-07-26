@@ -1,5 +1,9 @@
 package de.raidcraft.rcmultiworld.restart;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.api.language.TranslationProvider;
+import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
+import de.raidcraft.reference.Colors;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -11,53 +15,63 @@ import java.util.List;
  */
 public class ShutdownInfoTask implements Runnable {
 
-    private RestartManager manager;
-    private List<Integer> thresholds = new ArrayList<>();
+    private final RestartManager manager;
+    private final List<Integer> thresholds = new ArrayList<>();
 
-    public ShutdownInfoTask(RestartManager manager) {
+    public ShutdownInfoTask(final RestartManager manager) {
 
         this.manager = manager;
-        reload();
+        init();
     }
 
     public void reload() {
 
-        thresholds.clear();
-        for(int threshold : manager.getConfig().restartInfoThresholds) {
-            thresholds.add(threshold);
+        init();
+    }
+
+    private void init() {
+
+        this.thresholds.clear();
+        for (final int threshold : this.manager.getConfig().restartInfoThresholds) {
+            this.thresholds.add(threshold);
         }
     }
 
     public void run() {
 
-        if(manager.getNextRestart() < 0) return;
-
-        int diff = (int)(manager.getNextRestart()/1000) - (int)(System.currentTimeMillis()/1000);
-
-        if(diff == 0) {
-            manager.setNextRestart(-1);
-            manager.restart();
+        if (this.manager.getNextRestart() < 0) {
             return;
         }
 
-        if(thresholds.contains(diff)) {
-            String info = ChatColor.GOLD + "** Neustart in ";
-            if(diff >= 120) {
-                info += (diff/60) + " Minuten";
-            }
-            else if(diff == 60) {
-                info += "1 Minute";
-            }
-            else if(diff >= 10) {
-                info += diff + " Sekunden";
-            }
-            else {
+        final int diff = (int) (this.manager.getNextRestart() / 1000) - (int) (System.currentTimeMillis() / 1000);
 
-                info = ChatColor.GOLD + "** " + diff;
-            }
+        if (diff == 0) {
+            this.manager.setNextRestart(-1);
+            this.manager.restart();
+            return;
+        }
 
-            info += " **";
-            Bukkit.broadcastMessage(info);
+        final TranslationProvider translationProvider = RaidCraft.getComponent(RCMultiWorldPlugin.class).getTranslationProvider();
+
+        if (this.thresholds.contains(diff)) {
+
+            if(diff >= 60) {
+
+                translationProvider.broadcastMessage(
+                        "server.restart.timer.minutes",
+                        "%1$s** Server will be restarted in %2$s minute(s) **",
+                        Colors.Chat.INFO,
+                        diff / 60
+                );
+            } else {
+
+                translationProvider.broadcastMessage(
+                        "server.restart.timer.seconds",
+                        "%1$s** Server will be restarted in %2$s seconds **",
+                        Colors.Chat.WARNING,
+                        diff
+                );
+            }
         }
     }
 }

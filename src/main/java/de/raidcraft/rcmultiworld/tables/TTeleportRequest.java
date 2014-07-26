@@ -1,5 +1,7 @@
 package de.raidcraft.rcmultiworld.tables;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -16,6 +18,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "rcmultiworld_tp_requests")
+@Getter
+@Setter
 public class TTeleportRequest {
 
     @Id
@@ -28,72 +32,15 @@ public class TTeleportRequest {
     private int pitch;
     private int yaw;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(String player) {
-        this.player = player;
-    }
-
-    public String getWorld() {
-        return world;
-    }
-
-    public void setWorld(String world) {
-        this.world = world;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
-    }
-
-    public int getPitch() {
-        return pitch;
-    }
-
-    public void setPitch(int pitch) {
-        this.pitch = pitch;
-    }
-
-    public int getYaw() {
-        return yaw;
-    }
-
-    public void setYaw(int yaw) {
-        this.yaw = yaw;
-    }
-
     public Location getBukkitLocation() {
 
-        return new Location(Bukkit.getWorld(world), (double)x / 100., (double)y / 100., (double)z / 100., (float)yaw / 100F, (float)pitch / 100F);
+        return new Location(
+                Bukkit.getWorld(this.world),
+                (double) this.x / 100.,
+                (double) this.y / 100.,
+                (double) this.z / 100.,
+                (float) this.yaw / 100F,
+                (float) this.pitch / 100F
+        );
     }
 }

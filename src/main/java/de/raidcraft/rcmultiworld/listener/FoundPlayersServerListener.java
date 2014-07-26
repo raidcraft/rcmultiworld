@@ -15,16 +15,18 @@ public class FoundPlayersServerListener implements Listener {
 
     private static Map<String, FoundPlayersServerAction> registeredActions = new HashMap<>();
 
-    public static void registerAction(String player, FoundPlayersServerAction action) {
+    public static void registerAction(final String player, final FoundPlayersServerAction action) {
 
         registeredActions.put(player, action);
     }
 
     @EventHandler
-    public void onPlayersServerFound(FoundPlayersServerEvent event) {
+    public void onPlayersServerFound(final FoundPlayersServerEvent event) {
 
-        FoundPlayersServerAction action = registeredActions.get(event.getPlayer());
-        if(action == null || action.isExpired()) return;
+        final FoundPlayersServerAction action = registeredActions.get(event.getPlayer());
+        if ((action == null) || action.isExpired()) {
+            return;
+        }
 
         action.process(event);
     }

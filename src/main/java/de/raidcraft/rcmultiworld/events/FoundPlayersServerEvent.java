@@ -1,20 +1,29 @@
 package de.raidcraft.rcmultiworld.events;
 
+import lombok.Value;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+@Value
 public class FoundPlayersServerEvent extends Event {
 
-    private String player;
-    private String server;
-    private String world;
-    private double x;
-    private double y;
-    private double z;
-    private float yaw;
-    private float pitch;
+    private final String player;
+    private final String server;
+    private final String world;
+    private final double x;
+    private final double y;
+    private final double z;
+    private final float yaw;
+    private final float pitch;
 
-    public FoundPlayersServerEvent(String player, String server, String world, double x, double y, double z, float yaw, float pitch) {
+    public FoundPlayersServerEvent(final String player,
+                                   final String server,
+                                   final String world,
+                                   final double x,
+                                   final double y,
+                                   final double z,
+                                   final float yaw,
+                                   final float pitch) {
 
         this.player = player;
         this.server = server;
@@ -26,55 +35,21 @@ public class FoundPlayersServerEvent extends Event {
         this.pitch = pitch;
     }
 
-    public String getPlayer() {
-
-        return player;
-    }
-
-    public String getServer() {
-
-        return server;
-    }
-
-    public String getWorld() {
-
-        return world;
-    }
-
-    public double getX() {
-
-        return x;
-    }
-
-    public double getY() {
-
-        return y;
-    }
-
-    public double getZ() {
-
-        return z;
-    }
-
-    public float getYaw() {
-
-        return yaw;
-    }
-
-    public float getPitch() {
-
-        return pitch;
-    }
-
-    private static final HandlerList handlers = new HandlerList();
+    /**
+     * Todo: Eh?
+     */
+    private static final HandlerList HANDLERS = new HandlerList();
 
     public HandlerList getHandlers() {
 
-        return handlers;
+        return HANDLERS;
     }
 
     public static HandlerList getHandlerList() {
 
-        return handlers;
+        return HANDLERS;
     }
+    /**
+     * END - Eh?
+     */
 }

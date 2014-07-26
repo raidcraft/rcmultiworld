@@ -12,18 +12,18 @@ import java.util.Map;
  */
 public class PluginConfiguration extends ConfigurationBase<RCMultiWorldPlugin> {
 
-    private Map<String, String> worldAliases = new HashMap<>();
+    private final Map<String, String> worldAliases = new HashMap<>();
 
     @Setting("shutdown-teleport")
-    public boolean shutdownTeleport = false;
+    public boolean shutdownTeleport;
     @Setting("shutdown-teleport-server")
     public String shutdownTeleportServer = "lobby";
 
-    public PluginConfiguration(RCMultiWorldPlugin plugin) {
+    public PluginConfiguration(final RCMultiWorldPlugin plugin) {
 
         super(plugin, "config.yml");
 
-        worldAliases.clear();
+        this.worldAliases.clear();
     }
 
     private void loadAliases() {
@@ -34,31 +34,33 @@ public class PluginConfiguration extends ConfigurationBase<RCMultiWorldPlugin> {
          *      world: 'RPG Welt'
          *      lobby: 'Lobby'
          */
-        ConfigurationSection aliasSection = getConfigurationSection("aliases");
-        if(aliasSection != null) {
-            for(String world : aliasSection.getKeys(false)) {
-                worldAliases.put(world.toLowerCase(), aliasSection.getString(world));
+        final ConfigurationSection aliasSection = getConfigurationSection("aliases");
+        if (aliasSection != null) {
+            for (final String world : aliasSection.getKeys(false)) {
+                this.worldAliases.put(world.toLowerCase(), aliasSection.getString(world));
             }
         }
     }
 
     public int getLeaveTimeout() {
+
         return getInt("leave-timeout", 10);
     }
 
     public int getUpdateInterval() {
+
         return getInt("update-interval", 5);
     }
 
     public String getAlias(String worldName) {
 
-        if(worldAliases.size() == 0) {
+        if (this.worldAliases.isEmpty()) {
             loadAliases();
         }
 
         worldName = worldName.toLowerCase();
-        if(worldAliases.containsKey(worldName)){
-            return  worldAliases.get(worldName);
+        if (this.worldAliases.containsKey(worldName)) {
+            return this.worldAliases.get(worldName);
         }
         return worldName;
     }
