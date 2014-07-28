@@ -35,9 +35,6 @@ public class FoundPlayersServerEvent extends Event {
         this.pitch = pitch;
     }
 
-    /**
-     * Todo: Eh?
-     */
     private static final HandlerList HANDLERS = new HandlerList();
 
     public HandlerList getHandlers() {
@@ -49,7 +46,4 @@ public class FoundPlayersServerEvent extends Event {
 
         return HANDLERS;
     }
-    /**
-     * END - Eh?
-     */
 }

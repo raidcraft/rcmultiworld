@@ -59,16 +59,16 @@ public class ShutdownInfoTask implements Runnable {
 
                 translationProvider.broadcastMessage(
                         "server.restart.timer.minutes",
-                        "%1$s** Server will be restarted in %2$s minute(s) **",
                         Colors.Chat.INFO,
+                        "** Server will be restarted in %1$s minute(s) **",
                         diff / 60
                 );
             } else {
 
                 translationProvider.broadcastMessage(
                         "server.restart.timer.seconds",
-                        "%1$s** Server will be restarted in %2$s seconds **",
-                        Colors.Chat.WARNING,
+                        Colors.Chat.INFO,
+                        "** Server will be restarted in %1$s seconds **",
                         diff
                 );
             }

@@ -50,8 +50,8 @@ public class RestartManager {
 
         this.plugin.getTranslationProvider().broadcastMessage(
                 "server.restart.warning",
-                "%1$s** Server will be restarted **",
-                Colors.Chat.WARNING
+                Colors.Chat.WARNING,
+                "** SERVER WILL BE RESTARTED **"
         );
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), this.config.localRestartCommand);
     }

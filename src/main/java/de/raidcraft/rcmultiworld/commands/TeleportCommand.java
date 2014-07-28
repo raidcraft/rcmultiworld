@@ -14,6 +14,7 @@ import de.raidcraft.rcmultiworld.players.MultiWorldPlayer;
 import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
 import de.raidcraft.rcmultiworld.utilclasses.ServerLocation;
 import de.raidcraft.rcmultiworld.utilclasses.TeleportOnServerFoundAction;
+import de.raidcraft.reference.Colors;
 import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -29,8 +30,11 @@ import org.bukkit.entity.Player;
  */
 public class TeleportCommand {
 
-    public TeleportCommand(RCMultiWorldPlugin module) {
+    private final RCMultiWorldPlugin plugin;
 
+    public TeleportCommand(final RCMultiWorldPlugin plugin) {
+
+        this.plugin = plugin;
     }
 
     @Command(
@@ -39,20 +43,19 @@ public class TeleportCommand {
             min = 1
     )
          @CommandPermissions("rcmultiworld.tp")
-         public void teleport(CommandContext context, CommandSender sender) throws CommandException {
+         public void teleport(final CommandContext context, final CommandSender sender) throws CommandException {
 
         if(sender instanceof Player) {
-            Player player = (Player)sender;
-            RCMultiWorldPlugin plugin = RaidCraft.getComponent(RCMultiWorldPlugin.class);
+            final Player player = (Player)sender;
 
             if(context.argsLength() == 1) {
                 // teleport to coordinates
                 if(context.getString(0).contains(",")) {
-                    String[] coords = context.getString(0).split(",");
+                    final String[] coords = context.getString(0).split(",");
                     try {
-                        double x = Double.parseDouble(coords[0]);
-                        double y = Double.parseDouble(coords[1]);
-                        double z = Double.parseDouble(coords[2]);
+                        final double x = Double.parseDouble(coords[0]);
+                        final double y = Double.parseDouble(coords[1]);
+                        final double z = Double.parseDouble(coords[2]);
                         String world = player.getWorld().getName();
                         if(coords.length > 3) {
                             world = coords[3];
@@ -60,47 +63,90 @@ public class TeleportCommand {
 
                         if(world.equalsIgnoreCase(player.getWorld().getName())) {
                             Location location = new Location(player.getWorld(), x, y, z);
-                            plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
-                            plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
+                            this.plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
+                            this.plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
                             player.teleport(location);
-                            sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
-                            player.sendMessage(ChatColor.YELLOW + "Teleported.");
+                            this.plugin.getTranslationProvider().msg(
+                                    sender,
+                                    "command.teleport.sender.success",
+                                    Colors.Chat.SUCCESS,
+                                    "You teleported %1$s.",
+                                    player.getName());
+                            this.plugin.getTranslationProvider().msg(
+                                    sender,
+                                    "command.teleport.player.success",
+                                    Colors.Chat.SUCCESS,
+                                    "Teleported.");
                         }
                         else {
-                            String targetServer = RaidCraft.getTable(WorldInfoTable.class).getWorldHost(world);
-                            player.sendMessage(ChatColor.YELLOW + "Change to server: " + targetServer);
+                            final String targetServer = RaidCraft.getTable(WorldInfoTable.class).getWorldHost(world);
+                            this.plugin.getTranslationProvider().msg(
+                                    player,
+                                    "command.teleport.player.serverchange",
+                                    ChatColor.YELLOW,
+                                    "Change to server: %1$s",
+                                    targetServer);
                             plugin.getTeleportRequestManager()
                                     .addRequest(player.getName(),
                                             world, x, y, z, 0, 0);
                             BungeeCordUtil.changeServer(player, targetServer);
                         }
-                        sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
+                        this.plugin.getTranslationProvider().msg(
+                                sender,
+                                "command.teleport.sender.success",
+                                Colors.Chat.SUCCESS,
+                                "You teleported %1$s.",
+                                player.getName());
                         return;
                     }
                     catch(NumberFormatException | IndexOutOfBoundsException e) {
-                        throw new CommandException("Die Koordinaten haben das falsche Format! ('x,y,z' erwartet)");
+                        throw new CommandException(
+                            this.plugin.getTranslationProvider().tr(
+                                sender,
+                                "command.teleport.sender.wrongFormat",
+                                "Coordinates in the wrong format (x,y,z expected)"
+                            )
+                        );
                     }
                 }
 
                 // teleport to player
                 MultiWorldPlayer multiWorldPlayer = plugin.getPlayerManager().getPlayer(context.getString(0));
                 if(multiWorldPlayer == null || !multiWorldPlayer.isOnline()) {
-                    throw new CommandException("Kein passender Spieler gefunden.");
+                    throw new CommandException(
+                        this.plugin.getTranslationProvider().tr(
+                            sender,
+                            "command.teleport.sender.noplayer",
+                            "No matching players found."
+                        )
+                    );
                 }
 
                 Player targetPlayer = Bukkit.getPlayer(multiWorldPlayer.getName());
                 if(targetPlayer != null) {
-                    plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
-                    plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
+                    this.plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
+                    this.plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
                     player.teleport(targetPlayer);
-                    sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
-                    player.sendMessage(ChatColor.YELLOW + "Teleported.");
+
+                    this.plugin.getTranslationProvider().msg(
+                        sender,
+                        "command.teleport.sender.success",
+                        Colors.Chat.SUCCESS,
+                        "You teleported %1$s.",
+                        player.getName()
+                    );
+                    this.plugin.getTranslationProvider().msg(
+                        sender,
+                        "command.teleport.player.success",
+                        Colors.Chat.SUCCESS,
+                        "Teleported."
+                    );
                 }
                 else {
-                    plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
-                    plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
-                    FoundPlayersServerListener.registerAction(multiWorldPlayer.getName(), new TeleportOnServerFoundAction(player, plugin.getBungeeManager()));
-                    plugin.getBungeeManager().sendMessage(player, new FindPlayersServerMessage(multiWorldPlayer.getName()));
+                    this.plugin.getPlayerManager().getPlayer(player.getName()).setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
+                    this.plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(player.getName(), player.getLocation()));
+                    FoundPlayersServerListener.registerAction(multiWorldPlayer.getName(), new TeleportOnServerFoundAction(player, this.plugin.getBungeeManager()));
+                    this.plugin.getBungeeManager().sendMessage(player, new FindPlayersServerMessage(multiWorldPlayer.getName()));
                 }
             }
         }
@@ -138,7 +184,13 @@ public class TeleportCommand {
 
             MultiWorldPlayer multiWorldPlayer = plugin.getPlayerManager().getPlayer(context.getString(0));
             if(multiWorldPlayer == null || !multiWorldPlayer.isOnline()) {
-                throw new CommandException("Kein passender Spieler gefunden.");
+                throw new CommandException(
+                    this.plugin.getTranslationProvider().tr(
+                            sender,
+                            "command.teleport.sender.noplayer",
+                            "No matching players found."
+                    )
+                );
             }
 
             Player targetPlayer = Bukkit.getPlayer(context.getString(0));
@@ -146,8 +198,19 @@ public class TeleportCommand {
                 plugin.getPlayerManager().getPlayer(targetPlayer.getName()).setBeforeTeleportLocation(new ServerLocation(targetPlayer.getLocation()));
                 plugin.getBungeeManager().sendMessage(player, new SaveReturnLocationMessage(targetPlayer.getName(), targetPlayer.getLocation()));
                 targetPlayer.teleport(player);
-                sender.sendMessage(ChatColor.YELLOW + "You teleported " + targetPlayer.getName() + ".");
-                targetPlayer.sendMessage(ChatColor.YELLOW + "Teleported.");
+                this.plugin.getTranslationProvider().msg(
+                        sender,
+                        "command.teleport.sender.success",
+                        Colors.Chat.SUCCESS,
+                        "You teleported %1$s.",
+                        player.getName()
+                );
+                this.plugin.getTranslationProvider().msg(
+                        sender,
+                        "command.teleport.player.success",
+                        Colors.Chat.SUCCESS,
+                        "Teleported."
+                );
                 return;
             }
 
@@ -173,14 +236,25 @@ public class TeleportCommand {
 
         ServerLocation serverLocation = multiWorldPlayer.getBeforeTeleportLocation();
         if(serverLocation == null) {
-            throw new CommandException("Keine Return Location gespeichert!");
+            throw new CommandException(
+                this.plugin.getTranslationProvider().tr(
+                    sender,
+                    "command.return.sender.fail",
+                    "Keine Return Location gespeichert!"
+                )
+            );
         }
 
         Player player = (Player)sender;
         Location location = serverLocation.getBukkitLocation();
         if(location != null) {
             player.teleport(location);
-            player.sendMessage(ChatColor.YELLOW + "Teleported.");
+            this.plugin.getTranslationProvider().msg(
+                sender,
+                "command.teleport.player.success",
+                Colors.Chat.SUCCESS,
+                "Teleported."
+            );
         }
         else {
 

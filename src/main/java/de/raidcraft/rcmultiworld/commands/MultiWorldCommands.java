@@ -50,8 +50,8 @@ public class MultiWorldCommands {
             this.plugin.getTranslationProvider().msg(
                     sender,
                     "command.reload.success",
-                    "%1$s[RCMultiWorld] Reload complete.",
-                    Colors.Chat.SUCCESS);
+                    Colors.Chat.SUCCESS,
+                    "[RCMultiWorld] Reload complete.");
         }
     }
 }

@@ -35,8 +35,8 @@ public class RestartCommands {
         this.plugin.getTranslationProvider().msg(
                 sender,
                 "command.restart.success",
-                "%1$sThe Server will be restarted.",
-                Colors.Chat.SUCCESS
+                Colors.Chat.SUCCESS,
+                "The Server will be restarted."
         );
     }
 
