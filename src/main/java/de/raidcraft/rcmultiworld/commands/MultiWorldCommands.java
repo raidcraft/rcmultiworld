@@ -51,7 +51,7 @@ public class MultiWorldCommands {
                     sender,
                     "command.reload.success",
                     Colors.Chat.SUCCESS,
-                    "[RCMultiWorld] Reload complete.");
+                    "[RCMultiWorld] Plugin loaded successfully.");
         }
     }
 }

@@ -36,7 +36,7 @@ public class RestartCommands {
                 sender,
                 "command.restart.success",
                 Colors.Chat.SUCCESS,
-                "The Server will be restarted."
+                "Server restart commencing."
         );
     }
 

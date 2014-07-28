@@ -76,7 +76,7 @@ public class TeleportCommand {
                                     sender,
                                     "command.teleport.player.success",
                                     Colors.Chat.SUCCESS,
-                                    "Teleported.");
+                                    "You got teleported.");
                         }
                         else {
                             final String targetServer = RaidCraft.getTable(WorldInfoTable.class).getWorldHost(world);
@@ -84,7 +84,7 @@ public class TeleportCommand {
                                     player,
                                     "command.teleport.player.serverchange",
                                     ChatColor.YELLOW,
-                                    "Change to server: %1$s",
+                                    "You got teleported to server %1$s.",
                                     targetServer);
                             plugin.getTeleportRequestManager()
                                     .addRequest(player.getName(),
@@ -104,7 +104,7 @@ public class TeleportCommand {
                             this.plugin.getTranslationProvider().tr(
                                 sender,
                                 "command.teleport.sender.wrongFormat",
-                                "Coordinates in the wrong format (x,y,z expected)"
+                                "The Coordinates are in the wrong format (x, y, z requested)"
                             )
                         );
                     }
@@ -117,7 +117,8 @@ public class TeleportCommand {
                         this.plugin.getTranslationProvider().tr(
                             sender,
                             "command.teleport.sender.noplayer",
-                            "No matching players found."
+                            "Player %1$s can't be found.",
+                            context.getString(0)
                         )
                     );
                 }
@@ -139,7 +140,7 @@ public class TeleportCommand {
                         sender,
                         "command.teleport.player.success",
                         Colors.Chat.SUCCESS,
-                        "Teleported."
+                        "You got teleported."
                     );
                 }
                 else {
@@ -188,7 +189,8 @@ public class TeleportCommand {
                     this.plugin.getTranslationProvider().tr(
                             sender,
                             "command.teleport.sender.noplayer",
-                            "No matching players found."
+                            "Player %1$s can't be found.",
+                            context.getString(0)
                     )
                 );
             }
@@ -209,7 +211,7 @@ public class TeleportCommand {
                         sender,
                         "command.teleport.player.success",
                         Colors.Chat.SUCCESS,
-                        "Teleported."
+                        "You got teleported."
                 );
                 return;
             }
@@ -240,7 +242,7 @@ public class TeleportCommand {
                 this.plugin.getTranslationProvider().tr(
                     sender,
                     "command.return.sender.fail",
-                    "Keine Return Location gespeichert!"
+                    "We did't found a place where we can sent you back to."
                 )
             );
         }
@@ -253,7 +255,7 @@ public class TeleportCommand {
                 sender,
                 "command.teleport.player.success",
                 Colors.Chat.SUCCESS,
-                "Teleported."
+                "You got teleported."
             );
         }
         else {

@@ -47,7 +47,7 @@ public class PlayerManager {
         this.plugin.getTranslationProvider().broadcastMessage(
                 "player.login.broadcast",
                 Colors.Chat.INFO,
-                "Player %1$s connected.",
+                "Player %1$s joined the game.",
                 player
         );
         if (!this.players.containsKey(player)) {
@@ -61,7 +61,7 @@ public class PlayerManager {
         this.plugin.getTranslationProvider().broadcastMessage(
                 "player.logout.broadcast",
                 Colors.Chat.INFO,
-                "Player %1$s disconnected.",
+                "Player %1$s left the game.",
                 player
         );
         // TODO: Für was werden offline Spieler benötigt?

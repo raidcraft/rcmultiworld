@@ -68,7 +68,7 @@ public class TeleportRequestManager {
             }
 
             player.teleport(tTeleportRequest.getBukkitLocation());
-            this.plugin.getTranslationProvider().msg(player, "player.teleported", Colors.Chat.SUCCESS, "Teleported.");
+            this.plugin.getTranslationProvider().msg(player, "player.teleported", Colors.Chat.SUCCESS, "You got teleported.");
             RaidCraft.getDatabase(RCMultiWorldPlugin.class).delete(tTeleportRequest);
         }
     }
