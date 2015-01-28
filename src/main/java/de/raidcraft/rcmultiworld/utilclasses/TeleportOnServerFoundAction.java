@@ -25,7 +25,7 @@ public class TeleportOnServerFoundAction extends FoundPlayersServerAction {
     public void process(FoundPlayersServerEvent event) {
 
         RaidCraft.getComponent(RCMultiWorldPlugin.class).getTeleportRequestManager()
-                .addRequest(player.getName(), event.getWorld(), event.getX(), event.getY(), event.getZ(), event.getPitch(), event.getYaw());
+                .addRequest(player, event.getWorld(), event.getX(), event.getY(), event.getZ(), event.getPitch(), event.getYaw());
         BungeeCordUtil.changeServer(player, event.getServer());
     }
 }

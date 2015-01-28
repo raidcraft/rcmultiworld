@@ -7,15 +7,16 @@ import org.bukkit.event.Listener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Philip
  */
 public class FoundPlayersServerListener implements Listener {
 
-    private static Map<String, FoundPlayersServerAction> registeredActions = new HashMap<>();
+    private static Map<UUID, FoundPlayersServerAction> registeredActions = new HashMap<>();
 
-    public static void registerAction(String player, FoundPlayersServerAction action) {
+    public static void registerAction(UUID player, FoundPlayersServerAction action) {
 
         registeredActions.put(player, action);
     }

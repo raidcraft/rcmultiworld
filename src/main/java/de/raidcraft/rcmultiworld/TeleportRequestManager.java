@@ -2,65 +2,94 @@ package de.raidcraft.rcmultiworld;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.tables.TTeleportRequest;
-import org.bukkit.Bukkit;
+import de.raidcraft.rcmultiworld.tables.TWorld;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Philip Urban
- * Date: 28.10.13
- * Time: 10:31
- * To change this template use File | Settings | File Templates.
+ * @author Dragonfire
  */
 public class TeleportRequestManager {
 
     private RCMultiWorldPlugin plugin;
 
-    public TeleportRequestManager(RCMultiWorldPlugin plugin) {
-
-        this.plugin = plugin;
+    public TeleportRequestManager() {
+        reload();
     }
 
-    public void addRequest(String player, String world, double x, double y, double z, float pitch, float yaw) {
+    public void reload() {
+        plugin = RaidCraft.getComponent(RCMultiWorldPlugin.class);
+    }
+
+    public boolean addRequest(Player player, String worldAlias, double x, double y, double z, float pitch, float yaw) {
+
+        Optional<TWorld> world = plugin.getWorldManager().getWorldFromAlias(worldAlias);
+        if (!world.isPresent()) {
+            plugin.warning("addRequest: worldAlias " + worldAlias + " not found for Teleport Request from"
+                    + player.getDisplayName());
+
+            return false;
+        }
 
         // remove old request
-        removeRequest(player, world);
+        removeRequest(player, worldAlias);
 
         TTeleportRequest tTeleportRequest = new TTeleportRequest();
-        tTeleportRequest.setPlayer(player);
-        tTeleportRequest.setWorld(world);
-        tTeleportRequest.setX((int)x * 100);
-        tTeleportRequest.setY((int) y * 100);
-        tTeleportRequest.setZ((int) z * 100);
-        tTeleportRequest.setPitch((int)pitch * 100);
-        tTeleportRequest.setYaw((int)yaw * 100);
-        RaidCraft.getDatabase(RCMultiWorldPlugin.class).save(tTeleportRequest);
+        tTeleportRequest.setPlayer(player.getUniqueId());
+        tTeleportRequest.setWorld(world.get());
+        tTeleportRequest.setX(x);
+        tTeleportRequest.setY(y);
+        tTeleportRequest.setZ(z);
+        tTeleportRequest.setYaw(yaw);
+        tTeleportRequest.setPitch(pitch);
+
+        plugin.getDatabase().save(tTeleportRequest);
+        return true;
     }
 
-    public void removeRequest(String player, String world) {
-
-        TTeleportRequest tTeleportRequest = RaidCraft.getDatabase(RCMultiWorldPlugin.class)
-                .find(TTeleportRequest.class).where().ieq("player", player).ieq("world", world).findUnique();
-        if(tTeleportRequest != null) {
-            RaidCraft.getDatabase(RCMultiWorldPlugin.class).delete(tTeleportRequest);
+    /**
+     * @return if a request was removed
+     */
+    public boolean removeRequest(Player player, String worldAlias) {
+        Optional<TWorld> world = plugin.getWorldManager().getWorldFromAlias(worldAlias);
+        if (!world.isPresent()) {
+            plugin.warning("removeRequest: worldAlias " + worldAlias + " not found for Teleport Request from"
+                    + player.getDisplayName());
+            return false;
         }
+
+        TTeleportRequest tTeleportRequest = plugin.getDatabase().find(TTeleportRequest.class)
+                .where()
+                .eq("player", player.getUniqueId())
+                .eq("world_id", world.get().getId()).findUnique();
+        if (tTeleportRequest != null) {
+            plugin.getDatabase().delete(tTeleportRequest);
+            return true;
+        }
+        return false;
     }
 
-    public void teleportOnRequest(Player player) {
+    public boolean teleportOnRequest(Player player) {
 
-        List<TTeleportRequest> tTeleportRequests = RaidCraft.getDatabase(RCMultiWorldPlugin.class)
-                .find(TTeleportRequest.class).where().ieq("player", player.getName()).findList();
+        TTeleportRequest tTeleportRequest = plugin.getDatabase().find(TTeleportRequest.class)
+                .where().eq("player", player.getUniqueId()).findUnique();
 
-        for(TTeleportRequest tTeleportRequest : tTeleportRequests) {
-
-            if(Bukkit.getWorld(tTeleportRequest.getWorld()) == null) continue;
-
-            player.teleport(tTeleportRequest.getBukkitLocation());
-            player.sendMessage(ChatColor.YELLOW + "Teleported.");
-            RaidCraft.getDatabase(RCMultiWorldPlugin.class).delete(tTeleportRequest);
+        if (tTeleportRequest == null) {
+            plugin.info("teleportOnRequest: no request found for " + player.getDisplayName());
+            return false;
         }
+        Optional<Location> location = tTeleportRequest.getLocation();
+        if (!location.isPresent()) {
+            plugin.warning("teleportOnRequest: location not found for " + player.getDisplayName());
+            return false;
+        }
+
+        player.teleport(location.get());
+        player.sendMessage(ChatColor.YELLOW + "Teleported.");
+        plugin.getDatabase().delete(tTeleportRequest);
+        return true;
     }
 }

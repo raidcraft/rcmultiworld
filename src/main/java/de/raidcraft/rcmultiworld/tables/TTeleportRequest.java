@@ -1,11 +1,17 @@
 package de.raidcraft.rcmultiworld.tables;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,86 +20,33 @@ import javax.persistence.Table;
  * Time: 10:26
  * To change this template use File | Settings | File Templates.
  */
+@Getter
+@Setter
 @Entity
-@Table(name = "rcmultiworld_tp_requests")
+@Table(name = "multiworld_tp_requests")
 public class TTeleportRequest {
 
     @Id
     private int id;
-    private String player;
-    private String world;
-    private int x;
-    private int y;
-    private int z;
-    private int pitch;
-    private int yaw;
+    private UUID player;
+    @ManyToOne
+    private TWorld world;
+    private double x;
+    private double y;
+    private double z;
+    private float yaw;
+    private float pitch;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(String player) {
-        this.player = player;
-    }
-
-    public String getWorld() {
-        return world;
-    }
-
-    public void setWorld(String world) {
-        this.world = world;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getZ() {
-        return z;
-    }
-
-    public void setZ(int z) {
-        this.z = z;
-    }
-
-    public int getPitch() {
-        return pitch;
-    }
-
-    public void setPitch(int pitch) {
-        this.pitch = pitch;
-    }
-
-    public int getYaw() {
-        return yaw;
-    }
-
-    public void setYaw(int yaw) {
-        this.yaw = yaw;
-    }
-
-    public Location getBukkitLocation() {
-
-        return new Location(Bukkit.getWorld(world), (double)x / 100., (double)y / 100., (double)z / 100., (float)yaw / 100F, (float)pitch / 100F);
+    public Optional<Location> getLocation() {
+        World world = Bukkit.getWorld(getWorld().getWorld());
+        if (world == null) {
+            return Optional.empty();
+        }
+        return Optional.of(new Location(world,
+                getX(),
+                getY(),
+                getZ(),
+                getYaw(),
+                getPitch()));
     }
 }
