@@ -26,7 +26,7 @@ public class TeleportRequestManager {
 
     public boolean addRequest(Player player, String worldAlias, double x, double y, double z, float pitch, float yaw) {
 
-        Optional<TWorld> world = plugin.getWorldManager().getWorldFromAlias(worldAlias);
+        Optional<TWorld> world = plugin.getSimpleWorldManager().getWorldFromAlias(worldAlias);
         if (!world.isPresent()) {
             plugin.warning("addRequest: worldAlias " + worldAlias + " not found for Teleport Request from"
                     + player.getDisplayName());
@@ -54,7 +54,7 @@ public class TeleportRequestManager {
      * @return if a request was removed
      */
     public boolean removeRequest(Player player, String worldAlias) {
-        Optional<TWorld> world = plugin.getWorldManager().getWorldFromAlias(worldAlias);
+        Optional<TWorld> world = plugin.getSimpleWorldManager().getWorldFromAlias(worldAlias);
         if (!world.isPresent()) {
             plugin.warning("removeRequest: worldAlias " + worldAlias + " not found for Teleport Request from"
                     + player.getDisplayName());

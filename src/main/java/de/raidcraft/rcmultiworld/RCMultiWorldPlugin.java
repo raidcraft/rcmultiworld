@@ -1,6 +1,7 @@
 package de.raidcraft.rcmultiworld;
 
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.rcmultiworld.api.WorldManager;
 import de.raidcraft.rcmultiworld.bungeecord.BungeeListener;
 import de.raidcraft.rcmultiworld.commands.MultiWorldCommands;
 import de.raidcraft.rcmultiworld.commands.TeleportCommand;
@@ -29,7 +30,7 @@ public class RCMultiWorldPlugin extends BasePlugin {
     private RestartManager restartManager;
     private TeleportRequestManager teleportRequestManager;
     private PluginConfiguration config;
-    private WorldManager worldManager;
+    private SimpleWorldManager simpleWorldManager;
 
     @Override
     public void enable() {
@@ -46,7 +47,7 @@ public class RCMultiWorldPlugin extends BasePlugin {
         this.playerManager = new PlayerManager();
         this.restartManager = new RestartManager(this);
         this.teleportRequestManager = new TeleportRequestManager();
-        this.worldManager = new WorldManager();
+        this.simpleWorldManager = new SimpleWorldManager();
 
         reload();
     }
@@ -57,7 +58,7 @@ public class RCMultiWorldPlugin extends BasePlugin {
         restartManager.reload();
         config.reload();
         this.teleportRequestManager.reload();
-        this.worldManager.reload();
+        this.simpleWorldManager.reload();
     }
 
     @Override
@@ -74,5 +75,9 @@ public class RCMultiWorldPlugin extends BasePlugin {
     @Override
     public List<Class<?>> getDatabaseClasses() {
         return Arrays.asList(TWorld.class, TTeleportRequest.class);
+    }
+
+    public WorldManager getWorldManager() {
+        return this.simpleWorldManager;
     }
 }

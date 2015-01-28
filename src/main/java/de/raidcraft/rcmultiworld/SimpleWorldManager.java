@@ -1,16 +1,17 @@
 package de.raidcraft.rcmultiworld;
 
 import de.raidcraft.RaidCraft;
+import de.raidcraft.rcmultiworld.api.WorldManager;
 import de.raidcraft.rcmultiworld.tables.TWorld;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public class WorldManager {
+public class SimpleWorldManager implements WorldManager {
 
     private RCMultiWorldPlugin plugin;
 
-    public WorldManager() {
+    public SimpleWorldManager() {
         reload();
     }
     public void reload() {
@@ -27,5 +28,13 @@ public class WorldManager {
         return Optional.ofNullable(plugin.getDatabase().find(TWorld.class)
                 .where()
                 .eq("world", world).findUnique());
+    }
+
+    public Optional<String> getWorldHost(String alias) {
+        Optional<TWorld> world = getWorldFromAlias(alias);
+        if (!world.isPresent()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(world.get().getServer());
     }
 }

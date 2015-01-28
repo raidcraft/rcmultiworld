@@ -80,7 +80,7 @@ public class TeleportCommand {
                             if (!sucessfull) {
                                 return;
                             }
-                            String targetServer = plugin.getWorldManager().getWorldFromAlias(world).get().getServer();
+                            String targetServer = plugin.getSimpleWorldManager().getWorldFromAlias(world).get().getServer();
                             player.sendMessage(ChatColor.YELLOW + "Change to server: " + targetServer);
 
                             BungeeCordUtil.changeServer(player, targetServer);
@@ -165,7 +165,7 @@ public class TeleportCommand {
                     .addRequest(player,
                             player.getWorld().getName(), player.getLocation().getX(), player.getLocation().getY(),
                             player.getLocation().getZ(), player.getLocation().getPitch(), player.getLocation().getYaw());
-            Optional<TWorld> world = plugin.getWorldManager().getWorld(targetPlayer.getWorld().getUID());
+            Optional<TWorld> world = plugin.getSimpleWorldManager().getWorld(targetPlayer.getWorld().getUID());
             if (!world.isPresent()) {
                 throw new CommandException("Server des Spielers " + targetPlayer.getDisplayName() + " nicht gefunden");
             }
