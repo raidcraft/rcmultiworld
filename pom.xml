@@ -22,7 +22,7 @@
     <groupId>de.raidcraft</groupId>
     <artifactId>rcmultiworld</artifactId>
     <packaging>jar</packaging>
-    <version>1.1.6-SNAPSHOT</version>
+    <version>1.1.7-SNAPSHOT</version>
     <name>RCMultiWorld</name>
 
     <parent>

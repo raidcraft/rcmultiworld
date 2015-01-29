@@ -1,9 +1,8 @@
 package de.raidcraft.rcmultiworld;
 
-import de.raidcraft.RaidCraft;
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.rcmultiworld.api.WorldManager;
 import de.raidcraft.rcmultiworld.bungeecord.BungeeListener;
-import de.raidcraft.rcmultiworld.commands.InfoCommands;
 import de.raidcraft.rcmultiworld.commands.MultiWorldCommands;
 import de.raidcraft.rcmultiworld.commands.TeleportCommand;
 import de.raidcraft.rcmultiworld.listener.FoundPlayersServerListener;
@@ -11,18 +10,19 @@ import de.raidcraft.rcmultiworld.listener.PlayerListener;
 import de.raidcraft.rcmultiworld.players.PlayerManager;
 import de.raidcraft.rcmultiworld.restart.RestartManager;
 import de.raidcraft.rcmultiworld.tables.TTeleportRequest;
-import de.raidcraft.rcmultiworld.tables.WorldInfoTable;
+import de.raidcraft.rcmultiworld.tables.TWorld;
 import de.raidcraft.util.BungeeCordUtil;
+import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * @author Philip
  */
+@Getter
 public class RCMultiWorldPlugin extends BasePlugin {
 
     private BungeeManager bungeeManager;
@@ -30,6 +30,7 @@ public class RCMultiWorldPlugin extends BasePlugin {
     private RestartManager restartManager;
     private TeleportRequestManager teleportRequestManager;
     private PluginConfiguration config;
+    private SimpleWorldManager simpleWorldManager;
 
     @Override
     public void enable() {
@@ -38,17 +39,15 @@ public class RCMultiWorldPlugin extends BasePlugin {
         registerEvents(new FoundPlayersServerListener());
         registerCommands(MultiWorldCommands.class);
         registerCommands(TeleportCommand.class);
-        registerCommands(InfoCommands.class);
-
-        registerTable(WorldInfoTable.class, new WorldInfoTable());
 
         Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
 
-        config = configure(new PluginConfiguration(this), false);
+        config = configure(new PluginConfiguration(this));
         this.bungeeManager = new BungeeManager(this, getDescription().getName());
-        this.playerManager = new PlayerManager(this);
+        this.playerManager = new PlayerManager();
         this.restartManager = new RestartManager(this);
-        this.teleportRequestManager = new TeleportRequestManager(this);
+        this.teleportRequestManager = new TeleportRequestManager();
+        this.simpleWorldManager = new SimpleWorldManager();
 
         reload();
     }
@@ -58,18 +57,15 @@ public class RCMultiWorldPlugin extends BasePlugin {
 
         restartManager.reload();
         config.reload();
-
-        String mainWorld = Bukkit.getWorlds().get(0).getName();
-        for(World world : Bukkit.getWorlds()) {
-            RaidCraft.getTable(WorldInfoTable.class).addWorld(mainWorld, world.getName());
-        }
+        this.teleportRequestManager.reload();
+        this.simpleWorldManager.reload();
     }
 
     @Override
     public void disable() {
 
-        if(getConfig().shutdownTeleport) {
-            for(Player player : Bukkit.getOnlinePlayers()) {
+        if (getConfig().shutdownTeleport) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 BungeeCordUtil.changeServer(player, getConfig().shutdownTeleportServer);
                 // chat messages not possible here!!!
             }
@@ -78,34 +74,10 @@ public class RCMultiWorldPlugin extends BasePlugin {
 
     @Override
     public List<Class<?>> getDatabaseClasses() {
-
-        List<Class<?>> databases = new ArrayList<>();
-        databases.add(TTeleportRequest.class);
-
-        return databases;
+        return Arrays.asList(TWorld.class, TTeleportRequest.class);
     }
 
-    public PluginConfiguration getConfig() {
-
-        return config;
-    }
-
-    public BungeeManager getBungeeManager() {
-
-        return bungeeManager;
-    }
-
-    public PlayerManager getPlayerManager() {
-
-        return playerManager;
-    }
-
-    public RestartManager getRestartManager() {
-
-        return restartManager;
-    }
-
-    public TeleportRequestManager getTeleportRequestManager() {
-        return teleportRequestManager;
+    public WorldManager getWorldManager() {
+        return this.simpleWorldManager;
     }
 }

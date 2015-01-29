@@ -7,13 +7,15 @@ import de.raidcraft.rcmultiworld.players.MultiWorldPlayer;
 import de.raidcraft.rcmultiworld.utilclasses.ServerLocation;
 import org.bukkit.Location;
 
+import java.util.UUID;
+
 /**
  * @author Philip
  */
 @MessageName("SAVE_RETURN_LOCATION_MESSAGE")
 public class SaveReturnLocationMessage extends BungeeMessage {
 
-    private String player;
+    private UUID player;
     private String x;
     private String y;
     private String z;
@@ -22,7 +24,7 @@ public class SaveReturnLocationMessage extends BungeeMessage {
     private String world;
     private RCMultiWorldPlugin plugin;
 
-    public SaveReturnLocationMessage(String player, String x, String y, String z, String yaw, String pitch, String world) {
+    public SaveReturnLocationMessage(UUID player, String x, String y, String z, String yaw, String pitch, String world) {
 
         this.player = player;
         this.x = x;
@@ -34,7 +36,7 @@ public class SaveReturnLocationMessage extends BungeeMessage {
         this.plugin = RaidCraft.getComponent(RCMultiWorldPlugin.class);
     }
 
-    public SaveReturnLocationMessage(String player, Location location) {
+    public SaveReturnLocationMessage(UUID player, Location location) {
 
         this.player = player;
         this.x = String.valueOf(location.getX());
@@ -46,7 +48,7 @@ public class SaveReturnLocationMessage extends BungeeMessage {
         this.plugin = RaidCraft.getComponent(RCMultiWorldPlugin.class);
     }
 
-    public SaveReturnLocationMessage(String player, ServerLocation serverLocation) {
+    public SaveReturnLocationMessage(UUID player, ServerLocation serverLocation) {
 
         this.player = player;
         this.x = String.valueOf(serverLocation.getX());
@@ -69,7 +71,7 @@ public class SaveReturnLocationMessage extends BungeeMessage {
     public void process() {
 
         MultiWorldPlayer multiWorldPlayer = plugin.getPlayerManager().getPlayer(player);
-        if(multiWorldPlayer == null) {
+        if (multiWorldPlayer == null) {
             return;
         }
         ServerLocation location = new ServerLocation(world, Double.parseDouble(x), Double.parseDouble(y), Double.parseDouble(z),
