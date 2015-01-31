@@ -18,5 +18,6 @@ public class TWorld {
     private int id;
     private String alias;
     private String server;
-    private UUID world;
+    private UUID worldId;
+    private String folder;
 }

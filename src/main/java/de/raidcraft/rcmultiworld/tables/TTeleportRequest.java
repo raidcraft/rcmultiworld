@@ -38,7 +38,7 @@ public class TTeleportRequest {
     private float pitch;
 
     public Optional<Location> getLocation() {
-        World world = Bukkit.getWorld(getWorld().getWorld());
+        World world = Bukkit.getWorld(getWorld().getFolder());
         if (world == null) {
             return Optional.empty();
         }
