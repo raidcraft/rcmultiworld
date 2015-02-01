@@ -3,9 +3,11 @@ package de.raidcraft.rcmultiworld.players;
 import de.raidcraft.reference.Colors;
 import de.raidcraft.util.UUIDUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -36,4 +38,15 @@ public class PlayerManager {
         }
         return players.get(player);
     }
+
+    // TODO: move into raid-cratp api?
+    public Optional<MultiWorldPlayer> getPlayerStartsWith(String playerStartingName) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getName().startsWith(playerStartingName)) {
+                return Optional.of(getPlayer(player.getUniqueId()));
+            }
+        }
+        return Optional.empty();
+    }
+
 }
