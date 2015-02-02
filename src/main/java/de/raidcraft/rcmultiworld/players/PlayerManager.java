@@ -42,7 +42,7 @@ public class PlayerManager {
     // TODO: move into raid-cratp api?
     public Optional<MultiWorldPlayer> getPlayerStartsWith(String playerStartingName) {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getName().startsWith(playerStartingName)) {
+            if (player.getName().toLowerCase().startsWith(playerStartingName.toLowerCase())) {
                 return Optional.of(getPlayer(player.getUniqueId()));
             }
         }

@@ -94,7 +94,7 @@ public class TeleportCommand {
 
                 // teleport to player
                 Optional<MultiWorldPlayer> mwPlayer = plugin.getPlayerManager().getPlayerStartsWith(context.getString(0));
-                if (mwPlayer.isPresent()) {
+                if (!mwPlayer.isPresent()) {
                     throw new CommandException("Kein passender Spieler gefunden.");
                 }
                 Player targetPlayer = Bukkit.getPlayer(mwPlayer.get().getPlayer());
