@@ -93,27 +93,27 @@ public class TeleportCommand {
                 }
 
                 // teleport to player
-                Player targetPlayer = CommandUtil.grabPlayer(context.getString(0));
+                Optional<MultiWorldPlayer> mwPlayer = plugin.getPlayerManager().getPlayerStartsWith(context.getString(0));
+                if (!mwPlayer.isPresent()) {
+                    throw new CommandException("Kein passender Spieler gefunden.");
+                }
+                Player targetPlayer = Bukkit.getPlayer(mwPlayer.get().getPlayer());
                 if (targetPlayer != null) {
-                    plugin.getPlayerManager().getPlayer(player.getUniqueId())
+                    mwPlayer.get()
                             .setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
-                    plugin.getBungeeManager().sendMessage(
-                            player, new SaveReturnLocationMessage(player.getUniqueId(), player.getLocation()));
+                    plugin.getBungeeManager().sendMessage(player,
+                            new SaveReturnLocationMessage(player.getUniqueId(), player.getLocation()));
                     player.teleport(targetPlayer);
                     sender.sendMessage(ChatColor.YELLOW + "You teleported " + player.getName() + ".");
                     player.sendMessage(ChatColor.YELLOW + "Teleported.");
                 } else {
-                    plugin.getPlayerManager().getPlayer(player.getUniqueId())
-                            .setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
-                    plugin.getBungeeManager().sendMessage(
-                            player,
-                            new SaveReturnLocationMessage(player.getUniqueId(),
-                                    player.getLocation()));
-                    FoundPlayersServerListener.registerAction(
-                            targetPlayer.getUniqueId(),
+                    mwPlayer.get().setBeforeTeleportLocation(new ServerLocation(player.getLocation()));
+                    plugin.getBungeeManager().sendMessage(player,
+                            new SaveReturnLocationMessage(player.getUniqueId(), player.getLocation()));
+                    FoundPlayersServerListener.registerAction(mwPlayer.get().getPlayer(),
                             new TeleportOnServerFoundAction(player, plugin.getBungeeManager()));
-                    plugin.getBungeeManager().sendMessage(
-                            player, new FindPlayersServerMessage(targetPlayer.getUniqueId()));
+                    plugin.getBungeeManager().sendMessage(player,
+                            new FindPlayersServerMessage(mwPlayer.get().getPlayer()));
                 }
             }
 
