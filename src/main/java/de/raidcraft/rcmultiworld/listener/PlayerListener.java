@@ -16,7 +16,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().join(event.getPlayer().getUniqueId());
+        RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().join(event.getPlayer());
         event.setJoinMessage(null);
         Bukkit.getScheduler().runTaskLater(RaidCraft.getComponent(RCMultiWorldPlugin.class), new DelayedChecker(event.getPlayer()), 10L);
     }
@@ -28,7 +28,7 @@ public class PlayerListener implements Listener {
         if (Bukkit.getOnlinePlayers().length == 1) {
             RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().clear();
         }
-        RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().leave(event.getPlayer().getUniqueId());
+        RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().leave(event.getPlayer());
         event.setQuitMessage(null);
 
     }

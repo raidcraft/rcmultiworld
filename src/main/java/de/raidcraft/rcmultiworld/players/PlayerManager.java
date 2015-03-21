@@ -17,15 +17,15 @@ public class PlayerManager {
 
     private Map<UUID, MultiWorldPlayer> players = new HashMap<>();
 
-    public void join(UUID player) {
-        Bukkit.broadcastMessage(Colors.Chat.INFO + UUIDUtil.getNameFromUUID(player) + " hat sich eingeloggt.");
+    public void join(Player player) {
+        Bukkit.broadcastMessage(Colors.Chat.INFO + player.getName() + " hat sich eingeloggt.");
         if (!players.containsKey(player)) {
-            players.put(player, new MultiWorldPlayer(player));
+            players.put(player.getUniqueId(), new MultiWorldPlayer(player.getUniqueId()));
         }
     }
 
-    public void leave(UUID player) {
-        Bukkit.broadcastMessage(Colors.Chat.INFO + UUIDUtil.getNameFromUUID(player) + " hat das Spiel verlassen.");
+    public void leave(Player player) {
+        Bukkit.broadcastMessage(Colors.Chat.INFO + player.getName() + " hat das Spiel verlassen.");
     }
 
     public void clear() {
@@ -34,7 +34,10 @@ public class PlayerManager {
 
     public MultiWorldPlayer getPlayer(UUID player) {
         if (!players.containsKey(player)) {
-            join(player);
+            Player bukkitPlayer = Bukkit.getPlayer(player);
+            if(bukkitPlayer != null) {
+                join(bukkitPlayer);
+            }
         }
         return players.get(player);
     }
