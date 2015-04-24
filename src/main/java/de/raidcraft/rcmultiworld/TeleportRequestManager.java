@@ -41,8 +41,8 @@ public class TeleportRequestManager {
         tTeleportRequest.setPlayer(player.getUniqueId());
         tTeleportRequest.setWorld(world.get());
         tTeleportRequest.setX(((int) (x * 100)) / 100.0);
-        tTeleportRequest.setY(((int) (x * 100)) / 100.0);
-        tTeleportRequest.setZ(((int) (x * 100)) / 100.0);
+        tTeleportRequest.setY(((int) (y * 100)) / 100.0);
+        tTeleportRequest.setZ(((int) (z * 100)) / 100.0);
         tTeleportRequest.setYaw(yaw);
         tTeleportRequest.setPitch(pitch);
 
