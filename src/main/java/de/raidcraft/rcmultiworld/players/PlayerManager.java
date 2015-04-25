@@ -1,7 +1,8 @@
 package de.raidcraft.rcmultiworld.players;
 
+import de.raidcraft.RaidCraft;
+import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
 import de.raidcraft.reference.Colors;
-import de.raidcraft.util.UUIDUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -18,14 +19,20 @@ public class PlayerManager {
     private Map<UUID, MultiWorldPlayer> players = new HashMap<>();
 
     public void join(Player player) {
-        Bukkit.broadcastMessage(Colors.Chat.INFO + player.getName() + " hat sich eingeloggt.");
+
+        if (RaidCraft.getComponent(RCMultiWorldPlugin.class).getConfig().broadcastPlayerJoinQuit) {
+            Bukkit.broadcastMessage(Colors.Chat.INFO + player.getName() + " hat sich eingeloggt.");
+        }
         if (!players.containsKey(player)) {
             players.put(player.getUniqueId(), new MultiWorldPlayer(player.getUniqueId()));
         }
     }
 
     public void leave(Player player) {
-        Bukkit.broadcastMessage(Colors.Chat.INFO + player.getName() + " hat das Spiel verlassen.");
+
+        if (RaidCraft.getComponent(RCMultiWorldPlugin.class).getConfig().broadcastPlayerJoinQuit) {
+            Bukkit.broadcastMessage(Colors.Chat.INFO + player.getName() + " hat das Spiel verlassen.");
+        }
     }
 
     public void clear() {

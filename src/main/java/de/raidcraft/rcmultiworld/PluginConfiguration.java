@@ -18,6 +18,8 @@ public class PluginConfiguration extends ConfigurationBase<RCMultiWorldPlugin> {
     public boolean shutdownTeleport = false;
     @Setting("shutdown-teleport-server")
     public String shutdownTeleportServer = "lobby";
+    @Setting("broadcast-player-join-quit")
+    public boolean broadcastPlayerJoinQuit = true;
 
     public PluginConfiguration(RCMultiWorldPlugin plugin) {
 
