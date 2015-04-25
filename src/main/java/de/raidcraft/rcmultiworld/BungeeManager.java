@@ -1,6 +1,13 @@
 package de.raidcraft.rcmultiworld;
 
-import de.raidcraft.rcmultiworld.bungeecord.messages.*;
+import de.raidcraft.rcmultiworld.bungeecord.messages.BroadcastMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.BungeeMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.ChangeServerMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.ExecuteCommandMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.FindPlayersServerMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.MessageName;
+import de.raidcraft.rcmultiworld.bungeecord.messages.SaveReturnLocationMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.SendPlayersServerMessage;
 import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -35,9 +42,9 @@ public class BungeeManager {
             @Override
             public void run() {
 
-                if (Bukkit.getOnlinePlayers().length == 0) return;
+                if (Bukkit.getOnlinePlayers().size() == 0) return;
 
-                BungeeCordUtil.getPlayerList(Bukkit.getOnlinePlayers()[0]);
+                BungeeCordUtil.getPlayerList(Bukkit.getOnlinePlayers().iterator().next());
             }
         }, 20, plugin.getConfig().getUpdateInterval() * 20);
     }

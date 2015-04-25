@@ -25,7 +25,7 @@ public class PlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
 
         // clear list if last player leave
-        if (Bukkit.getOnlinePlayers().length == 1) {
+        if (Bukkit.getOnlinePlayers().size() == 1) {
             RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().clear();
         }
         RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().leave(event.getPlayer());
