@@ -34,8 +34,8 @@ public class TTeleportRequest {
     private int x;
     private int y;
     private int z;
-    private float yaw;
-    private float pitch;
+    private int yaw;
+    private int pitch;
 
     public Optional<Location> getLocation() {
         World world = Bukkit.getWorld(getWorld().getFolder());
@@ -46,7 +46,7 @@ public class TTeleportRequest {
                 (double) getX(),
                 (double) getY(),
                 (double) getZ(),
-                getYaw(),
-                getPitch()));
+                (float) getYaw(),
+                (float) getPitch()));
     }
 }

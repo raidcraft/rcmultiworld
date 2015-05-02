@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -43,8 +44,8 @@ public class TeleportRequestManager {
         tTeleportRequest.setX((int) x);
         tTeleportRequest.setY((int) y);
         tTeleportRequest.setZ((int) z);
-        tTeleportRequest.setYaw(yaw);
-        tTeleportRequest.setPitch(pitch);
+        tTeleportRequest.setYaw((int) yaw);
+        tTeleportRequest.setPitch((int) pitch);
 
         plugin.getDatabase().save(tTeleportRequest);
         return true;
@@ -61,12 +62,11 @@ public class TeleportRequestManager {
             return false;
         }
 
-        TTeleportRequest tTeleportRequest = plugin.getDatabase().find(TTeleportRequest.class)
+        List<TTeleportRequest> requests = plugin.getDatabase().find(TTeleportRequest.class)
                 .where()
-                .eq("player", player.getUniqueId())
-                .eq("world_id", world.get().getId()).findUnique();
-        if (tTeleportRequest != null) {
-            plugin.getDatabase().delete(tTeleportRequest);
+                .eq("player", player.getUniqueId()).findList();
+        if (requests != null) {
+            plugin.getDatabase().delete(requests);
             return true;
         }
         return false;
