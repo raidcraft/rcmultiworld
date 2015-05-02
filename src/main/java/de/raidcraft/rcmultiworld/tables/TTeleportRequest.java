@@ -31,9 +31,9 @@ public class TTeleportRequest {
     private UUID player;
     @ManyToOne
     private TWorld world;
-    private double x;
-    private double y;
-    private double z;
+    private int x;
+    private int y;
+    private int z;
     private float yaw;
     private float pitch;
 
@@ -43,9 +43,9 @@ public class TTeleportRequest {
             return Optional.empty();
         }
         return Optional.of(new Location(world,
-                getX(),
-                getY(),
-                getZ(),
+                (double) getX(),
+                (double) getY(),
+                (double) getZ(),
                 getYaw(),
                 getPitch()));
     }
