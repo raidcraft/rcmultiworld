@@ -138,7 +138,7 @@ public class TeleportCommand {
     }
 
     @Command(
-            aliases = {"summon", "s", "tphere"},
+            aliases = {"s", "tphere", "grab"},
             desc = "Summon command",
             min = 1
     )
