@@ -3,6 +3,7 @@ package de.raidcraft.rcmultiworld.commands;
 import com.sk89q.minecraft.util.commands.*;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -18,18 +19,28 @@ public class MultiWorldCommands {
     }
 
     @Command(
+            aliases = {"who", "online", "list"},
+            desc = "Who alias command"
+    )
+    @NestedCommand(NestedMultiworldCommands.class)
+    public void who(CommandContext context, CommandSender sender) throws CommandException {
+
+        Bukkit.dispatchCommand(sender, "glist");
+    }
+
+    @Command(
             aliases = {"rcmultiworld", "multiworld", "mv", "mw"},
             desc = "Main command"
     )
-    @NestedCommand(NestedLootCommands.class)
+    @NestedCommand(NestedMultiworldCommands.class)
     public void rcmultiworld(CommandContext context, CommandSender sender) throws CommandException {
     }
 
-    public static class NestedLootCommands {
+    public static class NestedMultiworldCommands {
 
         private final RCMultiWorldPlugin module;
 
-        public NestedLootCommands(RCMultiWorldPlugin module) {
+        public NestedMultiworldCommands(RCMultiWorldPlugin module) {
 
             this.module = module;
         }
