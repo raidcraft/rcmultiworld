@@ -24,7 +24,7 @@ public class MultiWorldCommands {
     )
     public void who(CommandContext context, CommandSender sender) throws CommandException {
 
-        Bukkit.dispatchCommand(sender, "glist");
+        Bukkit.dispatchCommand(sender, "/glist");
     }
 
     @Command(
