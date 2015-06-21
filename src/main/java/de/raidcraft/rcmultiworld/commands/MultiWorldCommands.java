@@ -18,14 +18,16 @@ public class MultiWorldCommands {
 
     }
 
-    @Command(
-            aliases = {"who", "online", "list"},
-            desc = "Who alias command"
-    )
-    public void who(CommandContext context, CommandSender sender) throws CommandException {
-
-        Bukkit.dispatchCommand(sender, "/glist");
-    }
+//    XXX: We can't invoke /glist here
+//    @Command(
+//            aliases = {"who", "online", "list"},
+//            desc = "Who alias command"
+//    )
+//    public void who(CommandContext context, CommandSender sender) throws CommandException {
+//
+//        sender.sendMessage("Command alias for '/glist'.");
+//        Bukkit.dispatchCommand(sender, "glist");
+//    }
 
     @Command(
             aliases = {"rcmultiworld", "multiworld", "mv", "mw"},
