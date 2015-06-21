@@ -22,7 +22,6 @@ public class MultiWorldCommands {
             aliases = {"who", "online", "list"},
             desc = "Who alias command"
     )
-    @NestedCommand(NestedMultiworldCommands.class)
     public void who(CommandContext context, CommandSender sender) throws CommandException {
 
         Bukkit.dispatchCommand(sender, "glist");
