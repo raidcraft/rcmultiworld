@@ -3,6 +3,7 @@ package de.raidcraft.rcmultiworld.players;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
 import de.raidcraft.reference.Colors;
+import de.raidcraft.util.UUIDUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -28,11 +29,29 @@ public class PlayerManager {
         }
     }
 
+    public void join(String name) {
+
+        UUID uuid = UUIDUtil.convertPlayer(name);
+        if(uuid == null) {
+            return;
+        }
+        players.put(uuid, new MultiWorldPlayer(uuid));
+    }
+
     public void leave(Player player) {
 
         if (RaidCraft.getComponent(RCMultiWorldPlugin.class).getConfig().broadcastPlayerJoinQuit) {
             Bukkit.broadcastMessage(Colors.Chat.INFO + player.getName() + " hat das Spiel verlassen.");
         }
+    }
+
+    public void leave(String name) {
+
+        UUID uuid = UUIDUtil.convertPlayer(name);
+        if(uuid == null) {
+            return;
+        }
+        players.remove(uuid);
     }
 
     public void clear() {

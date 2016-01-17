@@ -2,6 +2,8 @@ package de.raidcraft.rcmultiworld.listener;
 
 import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
+import de.raidcraft.rcmultiworld.bungeecord.messages.FindPlayersServerMessage;
+import de.raidcraft.rcmultiworld.bungeecord.messages.SendPlayersServerMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,6 +31,9 @@ public class PlayerListener implements Listener {
             RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().clear();
         }
         RaidCraft.getComponent(RCMultiWorldPlugin.class).getPlayerManager().leave(event.getPlayer());
+        RaidCraft.getComponent(RCMultiWorldPlugin.class).getBungeeManager()
+                .sendMessage(event.getPlayer(),
+                        new SendPlayersServerMessage(event.getPlayer().getName(), null, event.getPlayer().getLocation()));
         event.setQuitMessage(null);
 
     }
@@ -44,6 +49,10 @@ public class PlayerListener implements Listener {
 
         @Override
         public void run() {
+
+            RaidCraft.getComponent(RCMultiWorldPlugin.class).getBungeeManager()
+                    .sendMessage(player,
+                            new SendPlayersServerMessage(player.getName(), Bukkit.getWorlds().get(0).getName(), player.getLocation()));
 
             RaidCraft.getComponent(RCMultiWorldPlugin.class).getTeleportRequestManager().teleportOnRequest(player);
         }
