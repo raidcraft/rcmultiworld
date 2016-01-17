@@ -24,6 +24,10 @@
     <version>1.2.0-SNAPSHOT</version>
     <name>RCMultiWorld</name>
 
+    <scm>
+        <developerConnection>scm:git:ssh://git@git.raid-craft.de:2222/raid-craft-de/rcmultiworld.git</developerConnection>
+    </scm>
+
     <parent>
         <groupId>de.raidcraft</groupId>
         <artifactId>masterpom</artifactId>
@@ -33,7 +37,7 @@
     <repositories>
         <repository>
             <id>raidcraft</id>
-            <url>http://repo.raid-craft.eu/artifactory/repo/</url>
+            <url>http://repo.raid-craft.de/artifactory/repo/</url>
         </repository>
     </repositories>
 
