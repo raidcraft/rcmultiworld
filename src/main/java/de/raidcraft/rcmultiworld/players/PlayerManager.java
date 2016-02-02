@@ -32,6 +32,7 @@ public class PlayerManager {
         }
 
         for(String player : newPlayers) {
+            if(player == null || player.isEmpty()) continue;
             join(player);
         }
         for(Map.Entry<UUID, MultiWorldPlayer> entry : oldPlayers.entrySet()) {
@@ -65,8 +66,10 @@ public class PlayerManager {
         if (RaidCraft.getComponent(RCMultiWorldPlugin.class).getConfig().broadcastPlayerJoinQuit) {
             Bukkit.broadcastMessage(Colors.Chat.INFO + player.getName() + " hat das Spiel verlassen.");
         }
-        players.get(player.getUniqueId()).setOnline(false);
-        players.remove(player.getUniqueId());
+        if(players.containsKey(player.getUniqueId())) {
+            players.get(player.getUniqueId()).setOnline(false);
+            players.remove(player.getUniqueId());
+        }
     }
 
     public void leave(String name) {
