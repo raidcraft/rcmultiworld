@@ -15,6 +15,8 @@ public class MultiWorldPlayer {
 
     private UUID player;
     @Setter
+    private boolean online;
+    @Setter
     private GameMode gameMode = GameMode.SURVIVAL;
     @Setter
     private ServerLocation beforeTeleportLocation = null;
