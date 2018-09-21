@@ -75,7 +75,7 @@ public class TeleportRequestManager {
     public boolean teleportOnRequest(Player player) {
 
         TTeleportRequest tTeleportRequest = plugin.getDatabase().find(TTeleportRequest.class)
-                .where().eq("player", player.getUniqueId()).findUnique();
+                .where().eq("player", player.getUniqueId()).findOne();
 
         if (tTeleportRequest == null) {
             plugin.info("teleportOnRequest: no request found for " + player.getDisplayName());
