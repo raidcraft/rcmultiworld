@@ -47,7 +47,7 @@ public class TeleportRequestManager {
         tTeleportRequest.setYaw((int) yaw);
         tTeleportRequest.setPitch((int) pitch);
 
-        plugin.getDatabase().save(tTeleportRequest);
+        plugin.getRcDatabase().save(tTeleportRequest);
         return true;
     }
 
@@ -62,11 +62,11 @@ public class TeleportRequestManager {
             return false;
         }
 
-        List<TTeleportRequest> requests = plugin.getDatabase().find(TTeleportRequest.class)
+        List<TTeleportRequest> requests = plugin.getRcDatabase().find(TTeleportRequest.class)
                 .where()
                 .eq("player", player.getUniqueId()).findList();
         if (requests != null) {
-            plugin.getDatabase().delete(requests);
+            plugin.getRcDatabase().delete(requests);
             return true;
         }
         return false;
@@ -74,7 +74,7 @@ public class TeleportRequestManager {
 
     public boolean teleportOnRequest(Player player) {
 
-        TTeleportRequest tTeleportRequest = plugin.getDatabase().find(TTeleportRequest.class)
+        TTeleportRequest tTeleportRequest = plugin.getRcDatabase().find(TTeleportRequest.class)
                 .where().eq("player", player.getUniqueId()).findOne();
 
         if (tTeleportRequest == null) {
@@ -89,7 +89,7 @@ public class TeleportRequestManager {
 
         player.teleport(location.get());
         player.sendMessage(ChatColor.YELLOW + "Teleported.");
-        plugin.getDatabase().delete(tTeleportRequest);
+        plugin.getRcDatabase().delete(tTeleportRequest);
         return true;
     }
 }

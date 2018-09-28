@@ -19,13 +19,13 @@ public class SimpleWorldManager implements WorldManager {
     }
 
     public Optional<TWorld> getWorldFromAlias(String alias) {
-        return Optional.ofNullable(plugin.getDatabase().find(TWorld.class)
+        return Optional.ofNullable(plugin.getRcDatabase().find(TWorld.class)
                 .where()
                 .eq("alias", alias).findOne());
     }
 
     public Optional<TWorld> getWorld(UUID world) {
-        return Optional.ofNullable(plugin.getDatabase().find(TWorld.class)
+        return Optional.ofNullable(plugin.getRcDatabase().find(TWorld.class)
                 .where()
                 .eq("world", world).findOne());
     }
