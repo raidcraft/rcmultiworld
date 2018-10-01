@@ -23,7 +23,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "multiworld_tp_requests")
+@Table(name = "rc_multiworld_tp_requests")
 public class TTeleportRequest {
 
     @Id

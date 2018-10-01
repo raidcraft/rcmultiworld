@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migration xmlns="http://ebean-orm.github.io/xml/ns/dbmigration">
+    <changeSet type="apply">
+        <createTable name="rc_multiworld_tp_requests" pkName="pk_rc_multiworld_tp_requests">
+            <column name="id" type="integer" primaryKey="true"/>
+            <column name="player" type="uuid"/>
+            <column name="world_id" type="integer" references="rc_multiworld_world.id"
+                    foreignKeyName="fk_rc_multiworld_tp_requests_world_id"
+                    foreignKeyIndex="ix_rc_multiworld_tp_requests_world_id"/>
+            <column name="x" type="integer" notnull="true"/>
+            <column name="y" type="integer" notnull="true"/>
+            <column name="z" type="integer" notnull="true"/>
+            <column name="yaw" type="integer" notnull="true"/>
+            <column name="pitch" type="integer" notnull="true"/>
+        </createTable>
+        <createTable name="rc_multiworld_world" pkName="pk_rc_multiworld_world">
+            <column name="id" type="integer" primaryKey="true"/>
+            <column name="alias" type="varchar"/>
+            <column name="server" type="varchar"/>
+            <column name="world_id" type="uuid"/>
+            <column name="folder" type="varchar"/>
+        </createTable>
+    </changeSet>
+</migration>

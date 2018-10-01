@@ -1,0 +1,3 @@
+entity-packages: de.raidcraft.rcmultiworld
+transactional-packages: de.raidcraft.rcmultiworld
+querybean-packages: de.raidcraft.rcmultiworld

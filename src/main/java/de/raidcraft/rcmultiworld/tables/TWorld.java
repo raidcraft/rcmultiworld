@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "multiworld_world")
+@Table(name = "rc_multiworld_world")
 public class TWorld {
 
     @Id
