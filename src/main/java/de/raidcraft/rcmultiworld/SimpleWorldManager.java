@@ -1,8 +1,11 @@
 package de.raidcraft.rcmultiworld;
 
+import com.google.common.base.Strings;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.api.WorldManager;
 import de.raidcraft.rcmultiworld.tables.TWorld;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,9 +19,23 @@ public class SimpleWorldManager implements WorldManager {
     }
     public void reload() {
         plugin = RaidCraft.getComponent(RCMultiWorldPlugin.class);
+        for (World world : Bukkit.getServer().getWorlds()) {
+            TWorld alias = plugin.getRcDatabase().find(TWorld.class).where()
+                    .eq("alias", world.getName().toLowerCase()).findOneOrEmpty().orElseGet(() -> {
+                        TWorld tWorld = new TWorld();
+                        tWorld.setAlias(world.getName().toLowerCase());
+                        return tWorld;
+                    });
+            alias.setWorldId(world.getUID());
+            alias.setServer(Bukkit.getServerName());
+            alias.setFolder(Bukkit.getServer().getWorldContainer().getAbsolutePath());
+            plugin.getRcDatabase().save(alias);
+        }
     }
 
     public Optional<TWorld> getWorldFromAlias(String alias) {
+        if (Strings.isNullOrEmpty(alias)) return Optional.empty();
+        alias = alias.toLowerCase();
         return Optional.ofNullable(plugin.getRcDatabase().find(TWorld.class)
                 .where()
                 .eq("alias", alias).findOne());
