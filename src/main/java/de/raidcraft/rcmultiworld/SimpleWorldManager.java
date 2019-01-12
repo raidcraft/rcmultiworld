@@ -27,7 +27,7 @@ public class SimpleWorldManager implements WorldManager {
                         return tWorld;
                     });
             alias.setWorldId(world.getUID());
-            alias.setServer(Bukkit.getServerName());
+            alias.setServer(Bukkit.getWorlds().get(0).getName());
             alias.setFolder(Bukkit.getServer().getWorldContainer().getAbsolutePath());
             plugin.getRcDatabase().save(alias);
         }

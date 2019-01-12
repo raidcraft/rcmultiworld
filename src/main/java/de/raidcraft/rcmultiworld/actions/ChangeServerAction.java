@@ -7,6 +7,7 @@ import de.raidcraft.api.locations.Locations;
 import de.raidcraft.rcmultiworld.RCMultiWorldPlugin;
 import de.raidcraft.rcmultiworld.SimpleWorldManager;
 import de.raidcraft.rcmultiworld.tables.TWorld;
+import de.raidcraft.util.BungeeCordUtil;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -45,5 +46,6 @@ public class ChangeServerAction implements Action<Player> {
                 (float) config.getDouble("pitch", player.getLocation().getPitch()),
                 (float) config.getDouble("yaw", player.getLocation().getYaw())
         );
+        BungeeCordUtil.changeServer(player, world.get().getServer());
     }
 }
