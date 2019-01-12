@@ -1,6 +1,8 @@
 package de.raidcraft.rcmultiworld;
 
 import de.raidcraft.api.BasePlugin;
+import de.raidcraft.api.action.ActionAPI;
+import de.raidcraft.rcmultiworld.actions.ChangeServerAction;
 import de.raidcraft.rcmultiworld.api.WorldManager;
 import de.raidcraft.rcmultiworld.bungeecord.BungeeListener;
 import de.raidcraft.rcmultiworld.commands.MultiWorldCommands;
@@ -48,6 +50,10 @@ public class RCMultiWorldPlugin extends BasePlugin {
         this.restartManager = new RestartManager(this);
         this.teleportRequestManager = new TeleportRequestManager();
         this.simpleWorldManager = new SimpleWorldManager();
+
+        ActionAPI.register(this)
+                .global()
+                .action(new ChangeServerAction());
 
         reload();
     }
