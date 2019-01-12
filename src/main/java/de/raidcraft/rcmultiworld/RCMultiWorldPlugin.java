@@ -42,7 +42,8 @@ public class RCMultiWorldPlugin extends BasePlugin {
         registerCommands(MultiWorldCommands.class);
         registerCommands(TeleportCommand.class);
 
-        Bukkit.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeListener());
 
         config = configure(new PluginConfiguration(this));
         this.bungeeManager = new BungeeManager(this, getDescription().getName());

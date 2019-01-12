@@ -1,11 +1,14 @@
 package de.raidcraft.rcmultiworld;
 
 import com.google.common.base.Strings;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import de.raidcraft.RaidCraft;
 import de.raidcraft.rcmultiworld.api.WorldManager;
 import de.raidcraft.rcmultiworld.tables.TWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -27,7 +30,7 @@ public class SimpleWorldManager implements WorldManager {
                         return tWorld;
                     });
             alias.setWorldId(world.getUID());
-            alias.setServer(Bukkit.getWorlds().get(0).getName());
+            alias.setServer(Bukkit.getServerName());
             alias.setFolder(Bukkit.getServer().getWorldContainer().getAbsolutePath());
             plugin.getRcDatabase().save(alias);
         }
