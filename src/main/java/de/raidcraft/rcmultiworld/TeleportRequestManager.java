@@ -65,11 +65,8 @@ public class TeleportRequestManager {
         List<TTeleportRequest> requests = plugin.getRcDatabase().find(TTeleportRequest.class)
                 .where()
                 .eq("player", player.getUniqueId()).findList();
-        if (requests != null) {
-            plugin.getRcDatabase().delete(requests);
-            return true;
-        }
-        return false;
+        plugin.getRcDatabase().deleteAll(requests);
+        return true;
     }
 
     public boolean teleportOnRequest(Player player) {
